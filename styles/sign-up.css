@@ -95,8 +95,8 @@ body {
 }
 
 .signup-button {
-    background-image: var(--brand-color);
-    color: black;
+    background-image: linear-gradient(to right, #ff5858, #f857a6);
+    color: #fff;
     border: none;
     border-radius: 20px;
     padding: 15px 20px;
@@ -111,7 +111,7 @@ body {
 }
 
 .links a {
-    color: rgb(55, 210, 221);
+    color: #36D1DC;
     text-decoration: none;
 }
 

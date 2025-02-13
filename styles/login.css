@@ -6,7 +6,7 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(0, 0, 0, 0.9));
-    color: white;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,8 +95,8 @@ body {
 }
 
 .login-button {
-    background-image: var(--brand-color);
-    color: black;
+    background-image: linear-gradient(to right, #ff5858, #f857a6);
+    color: #fff;
     border: none;
     border-radius: 20px;
     padding: 15px 20px;
@@ -111,7 +111,7 @@ body {
 }
 
 .links a {
-    color: rgb(55, 210, 221);
+    color: #36D1DC;
     text-decoration: none;
 }
 
@@ -119,7 +119,6 @@ body {
     text-decoration: underline;
 }
 
-/* Estilos para el botón de cerrar con el ícono */
 .close-btn {
     position: absolute;
     top: 10px;
