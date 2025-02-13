@@ -1,0 +1,136 @@
+:root {
+    --brand-color: linear-gradient(to right, rgb(253,85,100), rgb(55, 210, 221));
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(0, 0, 0, 0.9));
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    position: relative;
+    background-color: #121212;
+    padding: 40px;
+    border-radius: 8px;
+    width: 450px;
+    text-align: center;
+}
+
+.login-container img {
+    width: 70px;
+    margin-bottom: 20px;
+}
+
+.login-container h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.social-login button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.social-login button:hover {
+    background-color: #444;
+}
+
+.social-login button i {
+    font-size: 18px;
+}
+
+.divider {
+    border-top: 1px solid #333;
+    margin: 20px 0;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #222;
+    color: white;
+    font-size: 16px;
+}
+
+.form-group input::placeholder {
+    color: #666;
+}
+
+.login-button {
+    background-image: var(--brand-color);
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.links {
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+.links a {
+    color: rgb(55, 210, 221);
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el botón de cerrar con el ícono */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: rgb(253,85,100);
+}

@@ -1,3 +1,7 @@
+:root {
+    --brand-color: linear-gradient(to right, rgb(253,85,100), rgb(55, 210, 221));
+}
+
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
@@ -13,7 +17,7 @@ body {
   }
 
   .header .text {
-    background-image: linear-gradient(to right, rgb(55, 210, 221), rgb(211, 66, 189));
+    background-image: var(--brand-color);
     -webkit-background-clip: text;
     color: transparent;
     font-size: 24px;
@@ -24,6 +28,7 @@ body {
     width: 35px;
     height: 35px;
     margin-right: 10px;
+    margin-top: 5px;
   }
 
   .profile-container {
@@ -147,7 +152,7 @@ body {
   }
 
   .navigation .nav-item:hover {
-    background-image: linear-gradient(to right, rgb(55, 210, 221), rgb(211, 66, 189));
+    background-image: var(--brand-color);
     -webkit-background-clip: text;
     color: transparent;
   }
@@ -161,7 +166,7 @@ body {
     position: absolute;
     top: -5px;
     right: -7px;
-    background-image: linear-gradient(to right, rgb(55, 210, 221), rgb(211, 66, 189));
+    background-image: var(--brand-color);
     color: transparent;
     color: #fff;
     font-size: 10px;
