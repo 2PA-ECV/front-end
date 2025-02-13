@@ -1,5 +1,5 @@
 :root {
-    --brand-color: linear-gradient(to right, rgb(253,85,100), rgb(55, 210, 221));
+    --brand-color: linear-gradient(to right, #ff5858, #f857a6, #9cecfb, #65c7f7, #0052d4);
 }
 
 body {
