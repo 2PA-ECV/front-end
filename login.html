@@ -39,5 +39,13 @@
             <p>¿No tienes cuenta? <a href="/sign-up.html">Suscríbete a 2 PA</a></p>
         </div>
     </div>
+
+    <script>
+        document.querySelector('.login-button').addEventListener('click', (event) => {
+            event.preventDefault(); // Prevents the form from submitting normally
+            window.location.href = 'like-page.html'; // Redirects to the like page
+        });
+
+    </script>
 </body>
 </html>
