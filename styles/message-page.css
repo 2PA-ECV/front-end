@@ -73,6 +73,7 @@ body {
 .match {
     text-align: center;
     color: #fff;
+    cursor: pointer;
 }
 
 .match img {
@@ -101,6 +102,7 @@ body {
     padding: 15px 0;
     border-bottom: 1px solid #333;
     border-top: 1px solid #333;
+    cursor: pointer;
 }
 
 .message img {

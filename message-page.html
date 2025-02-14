@@ -56,14 +56,14 @@
 
   <div class="messages-container">
     <h2>Mensajes</h2>
-    <div class="message">
-      <img src="/images/lucas.png" alt="Profile picture of Fatou">
-      <div class="info">
-        <div class="name">Claudia</div>
-        <div class="status">¡Haz match ahora!</div>
+      <div class="message">
+        <img src="/images/lucas.png" alt="Profile picture of Fatou">
+        <div class="info">
+          <div class="name">Claudia</div>
+          <div class="status">¡Haz match ahora!</div>
+        </div>
+        <div class="badge">LE GUSTAS</div>
       </div>
-      <div class="badge">LE GUSTAS</div>
-    </div>
   </div>
 
   <div class="empty-state">
@@ -79,6 +79,21 @@
       <a href="profile-page.html" class="nav-item"><i class="fas fa-user"></i></a>
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('.message').forEach(message => {
+      message.addEventListener('click', () => {
+          window.location.href = 'private-message-page.html'; // Change this URL to your private chat page
+      });
+    });
+
+    document.querySelectorAll('.match').forEach(message => {
+      message.addEventListener('click', () => {
+          window.location.href = 'private-message-page.html'; // Change this URL to your private chat page
+      });
+    });
+
+  </script>
 </body>
 </html>
 
