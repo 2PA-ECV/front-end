@@ -33,7 +33,8 @@ body {
 }
 
 .matches-container {
-    padding: 10px 20px;
+    padding: 10px 20px 20px;
+    border-bottom: 1px solid #333;
 }
 
 .matches-container h2 {
@@ -54,31 +55,16 @@ body {
 }
 
 .match img {
-    width: 60px;
-    height: 80px;
+    width: 80px;
+    height: 120px;
     border-radius: 10px;
     object-fit: cover;
     border: 2px solid #fff;
 }
 
-.match .likes {
-    position: relative;
-}
-
-.match .likes span {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #ffcc00;
-    color: #000;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 5px;
-    border-radius: 50%;
-}
-
 .messages-container {
-    padding: 20px;
+    padding: 10px 20px 20px;
+    z-index: 10;
 }
 
 .messages-container h2 {
@@ -93,6 +79,7 @@ body {
     gap: 15px;
     padding: 15px 0;
     border-bottom: 1px solid #333;
+    border-top: 1px solid #333;
 }
 
 .message img {
@@ -117,7 +104,7 @@ body {
 }
 
 .message .badge {
-    background-color: #ffcc00;
+    background-image: var(--brand-color);
     color: #000;
     font-size: 12px;
     font-weight: bold;
