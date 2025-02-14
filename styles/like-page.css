@@ -179,7 +179,7 @@ body {
 }
 
 .navigation .nav-item:hover {
-  background-image: var(--brand-color);
+  background-image: linear-gradient(to right, #9cecfb, #65c7f7, #0052d4);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -193,7 +193,7 @@ body {
   position: absolute;
   top: -5px;
   right: -7px;
-  background-image: var(--brand-color);
+  background-image: linear-gradient(to right, #9cecfb, #65c7f7, #0052d4);
   color: transparent;
   color: #fff;
   font-size: 10px;
