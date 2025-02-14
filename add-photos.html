@@ -7,128 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/add-photos.css">
-  <style>
-    :root {
-      --brand-color: linear-gradient(to right, #ff5858, #f857a6, #9cecfb, #65c7f7, #0052d4);
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #000;
-      color: #fff;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #1c1c1e;
-      border-bottom: 1px solid #333;
-    }
-
-    .header .text {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .header .ok-button {
-      background-image: linear-gradient(to right, #ff5858, #f857a6);
-      color: white;
-      padding: 8px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .header .ok-button:hover {
-      transform: scale(1.1);
-    }
-
-    .tabs {
-      display: flex;
-      justify-content: space-around;
-      background-color: #1c1c1e;
-      border-bottom: 1px solid #333;
-    }
-
-    .tabs div {
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #ff6b6b;
-    }
-
-    .tabs .sections {
-      border-bottom: 2px solid #ff6b6b;
-    }
-
-    .profile-photos {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 10px;
-      padding: 20px;
-      width: 100%;
-      height: calc(100vh - 93px);
-      box-sizing: border-box;
-    }
-
-    .photo-container {
-      position: relative;
-      border-radius: 10px;
-      background-color: #222;
-      border: 2px solid #fff;
-    }
-
-    .photo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 7px;
-    }
-
-    .photo-container .delete-icon {
-      position: absolute;
-      top: 5px;
-      right: 8px;
-      color: #ff6b6b;
-      border: none;
-      cursor: pointer;
-      font-size: 24px;
-      transition: transform 0.3s;
-    }
-
-    .photo-container .delete-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .add-photo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #222;
-      border-radius: 10px;
-      border: 2px dashed #555;
-      color: #fff;
-      font-size: 24px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .add-photo:hover {
-      background-color: #333;
-    }
-
-    .add-photo:hover .plus-icon {
-      transform: scale(1.5);
-    }
-
-  </style>
 </head>
 <body>
   <div class="header">
@@ -144,7 +22,9 @@
     <div class="sections">Vista previa</div>
   </div>
 
-  <div class="profile-photos"></div>
+  <div class="profile-photos">
+    
+  </div>
   <input type="file" id="fileInput" style="display: none;" accept="image/*">
 
   <script>
