@@ -18,9 +18,6 @@
   
   <div class="profile-container">
     <div class="image-progress">
-      <div class="progress-bar"><div class="fill"></div></div>
-      <div class="progress-bar"><div class="fill"></div></div>
-      <div class="progress-bar"><div class="fill"></div></div>
     </div>
     <img src="images/lucas.png" class="profile-image">
     <div class="profile-details">
@@ -41,18 +38,30 @@
   </div>
   <script>
     const profileImage = document.querySelector('.profile-image');
-    const progressBars = document.querySelectorAll('.progress-bar .fill');
+    const imageProgressContainer = document.querySelector('.image-progress');
     let currentIndex = 0;
     const images = [
         "images/lucas.png",
         "images/lucas2.png",
-        "images/lucas3.png"
     ];
 
+    function generateProgressBars() {
+      imageProgressContainer.innerHTML = '';
+      images.forEach(() => {
+        const progressBar = document.createElement('div');
+        progressBar.classList.add('progress-bar');
+        const fill = document.createElement('div');
+        fill.classList.add('fill');
+        progressBar.appendChild(fill);
+        imageProgressContainer.appendChild(progressBar);
+      });
+    }
+
     function updateProgress() {
-        progressBars.forEach((bar, index) => {
-            bar.style.width = index === currentIndex ? "100%" : "0%";
-        });
+      const progressBars = document.querySelectorAll('.progress-bar .fill');
+      progressBars.forEach((bar, index) => {
+        bar.style.width = index === currentIndex ? "100%" : "0%";
+      });
     }
 
     document.querySelector('.profile-container').addEventListener('click', (event) => {
@@ -68,6 +77,8 @@
         profileImage.src = images[currentIndex];
         updateProgress();
     });
+
+    generateProgressBars();
     updateProgress();
   </script>
 </body>
