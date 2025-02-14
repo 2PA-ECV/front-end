@@ -39,5 +39,36 @@
     <a href="message-page.html" class="nav-item"><span class="nav-item comments"><i class="fas fa-comment"></i></span></a>
     <a href="profile-page.html" class="nav-item"><i class="fas fa-user"></i></a>
   </div>
+  <script>
+    const profileImage = document.querySelector('.profile-image');
+    const progressBars = document.querySelectorAll('.progress-bar .fill');
+    let currentIndex = 0;
+    const images = [
+        "images/lucas.png",
+        "images/lucas2.png",
+        "images/lucas3.png"
+    ];
+
+    function updateProgress() {
+        progressBars.forEach((bar, index) => {
+            bar.style.width = index === currentIndex ? "100%" : "0%";
+        });
+    }
+
+    document.querySelector('.profile-container').addEventListener('click', (event) => {
+        const containerWidth = event.currentTarget.clientWidth;
+        const clickX = event.clientX;
+
+        if (clickX > containerWidth / 2) {
+            currentIndex = (currentIndex + 1) % images.length;
+        } else {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+        }
+
+        profileImage.src = images[currentIndex];
+        updateProgress();
+    });
+    updateProgress();
+  </script>
 </body>
 </html>
