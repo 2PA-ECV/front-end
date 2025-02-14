@@ -34,7 +34,7 @@
       <p>Editar perfil</p>
     </div>
     <div class="action">
-      <i class="fas fa-camera add"></i>
+      <i id="addPhotoBtn" class="fas fa-camera add"></i>
       <p>Añadir fotos</p>
     </div>
   </div>
@@ -67,9 +67,10 @@
   </div>
 
   <script>
-    const modal = document.getElementById("modal");
+  const modal = document.getElementById("modal");
   const closeModal = document.getElementById("closeModal");
   const addFriendBtn = document.getElementById("addFriendBtn");
+  const addPhotoBtn = document.getElementById("addPhotoBtn");
 
   addFriendBtn.addEventListener("click", () => modal.style.display = "flex");
   closeModal.addEventListener("click", () => modal.style.display = "none");
@@ -92,6 +93,11 @@
       alert("Por favor, ingresa un hashtag válido.");
     }
   }
+
+  addPhotoBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            window.location.href = 'add-photos.html';
+        });
   </script>
 </body>
 </html>
