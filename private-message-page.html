@@ -1,0 +1,77 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/private-message-page.css">
+</head>
+<body>
+    <div class="header">
+        <a href="/message-page.html">
+            <i class="fas fa-arrow-left back-button"></i>
+        </a>
+        <div class="profile-name">
+            <img src="/images/lucas.png" alt="Profile picture of Helena">
+            <span>Helena</span>
+        </div>
+        <span></span>
+    </div>
+    <div class="content">
+        <h1>Dile algo a <span>Helena</span></h1>
+        <img src="images/lucas.png" alt="Profile picture of Helena with a scenic background">
+        <p>Para saber cuándo Helena ha leído tu mensaje.</p>
+        <button class="activate-button">✔ Activar Confirmaciones de lectura</button>
+    </div>
+    <div class="messages-container"></div>
+    <div class="footer">
+        <i class="fas fa-smile icon"></i>
+        <input type="text" id="messageInput" placeholder="Escribe un mensaje">
+        <span class="send-button" id="sendMessage"><i class="fas fa-paper-plane"></i></span>
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageButton = document.getElementById('sendMessage');
+        const contentSection = document.querySelector('.content');
+        const messagesContainer = document.querySelector('.messages-container');
+
+        // Función para enviar el mensaje
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+
+            if (messageText) {
+                // Crear mensaje enviado
+                const newMessage = document.createElement('div');
+                newMessage.classList.add('message', 'sent');
+                newMessage.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-text">${messageText}</div>
+                        <div class="message-time">Hace un momento</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(newMessage);
+                
+                // Limpiar input y ocultar contenido
+                messageInput.value = '';
+                contentSection.style.display = 'none';
+
+                // Hacer scroll al último mensaje
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // Enviar mensaje al hacer clic en el botón
+        sendMessageButton.addEventListener('click', sendMessage);
+
+        // Enviar mensaje cuando se presione "Enter"
+        messageInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
