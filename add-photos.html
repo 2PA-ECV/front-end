@@ -18,13 +18,12 @@
   </div>
 
   <div class="tabs">
-    <div class="sections">Editar</div>
-    <div class="sections">Vista previa</div>
+    <div class="sections active" id="edit-tab">Editar</div>
+    <div class="divider"></div>
+    <div class="sections" id="preview-tab">Vista previa</div>
   </div>
 
-  <div class="profile-photos">
-    
-  </div>
+  <div class="profile-photos"></div>
   <input type="file" id="fileInput" style="display: none;" accept="image/*">
 
   <script>
@@ -34,7 +33,7 @@
       function createAddPhotoButton() {
         const addPhotoButton = document.createElement('div');
         addPhotoButton.classList.add('add-photo');
-        addPhotoButton.innerHTML = '<i class="fas fa-plus"></i>';
+        addPhotoButton.innerHTML = '<i class="fas fa-plus plus-btn"></i>';
         
         addPhotoButton.addEventListener('click', function() {
           document.getElementById('fileInput').click();
@@ -81,6 +80,21 @@
       }
 
       initializePhotoSlots();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const editTab = document.getElementById('edit-tab');
+      const previewTab = document.getElementById('preview-tab');
+
+      editTab.addEventListener('click', function() {
+        editTab.classList.add('active');
+        previewTab.classList.remove('active');
+      });
+
+      previewTab.addEventListener('click', function() {
+        previewTab.classList.add('active');
+        editTab.classList.remove('active');
+      });
     });
   </script>
 </body>

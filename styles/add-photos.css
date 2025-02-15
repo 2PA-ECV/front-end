@@ -42,19 +42,34 @@ body {
 .tabs {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     background-color: #1c1c1e;
     border-bottom: 1px solid #333;
-}
-
-.tabs div {
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #ff6b6b;
+    position: relative;
 }
 
 .tabs .sections {
-    border-bottom: 2px solid #ff6b6b;
+    padding: 13px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    transition: border-bottom 0.3s;
+}
+
+.tabs .sections:hover {
+    color: rgb(253,85,100);
+}
+
+.tabs .sections.active {
+    color: rgb(253,85,100);
+    border-bottom: 2px solid rgb(253,85,100);
+}
+
+.tabs .divider {
+    width: 1px;
+    height: 48px;
+    background-color: #333;
 }
 
 .profile-photos {
@@ -114,6 +129,6 @@ body {
     background-color: #333;
 }
 
-.add-photo:hover .plus-icon {
+.add-photo:hover .plus-btn {
     transform: scale(1.5);
 }
