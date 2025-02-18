@@ -11,6 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow-y: auto;
 }
 
 .signup-container {
@@ -20,6 +21,8 @@ body {
     border-radius: 8px;
     width: 450px;
     text-align: center;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .signup-container img {
@@ -80,7 +83,7 @@ body {
     margin-bottom: 5px;
 }
 
-.form-group input {
+.form-group input, .form-group select {
     width: 100%;
     padding: 15px;
     border: 1px solid #333;
@@ -88,6 +91,15 @@ body {
     background-color: #222;
     color: white;
     font-size: 16px;
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 40px;
 }
 
 .form-group input::placeholder {
