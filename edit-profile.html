@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/edit-profile.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1c1c1e;
+            border-bottom: 1px solid #333;
+            position: fixed; 
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10; 
+        }
+
+        .header .text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header .ok-button {
+            background-image: linear-gradient(to right, #ff5858, #f857a6);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .header .ok-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Añadir un margen superior para que el formulario no se solape con el header */
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        form {
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+            width: 80%;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background: #222;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        .age-range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            outline: none;
+            background-image: linear-gradient(to right, #ff5858, #f857a6);
+            border-radius: 20px;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;  
+            appearance: none;
+            width: 20px;  
+            height: 20px;  
+            border-radius: 50%;  
+            background-color: #fff;  
+            cursor: pointer;  
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            background-color: #333;
+        }
+        
+        .form-group label {
+            color: #ccc;
+        }
+        
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span></span>
+        <div class="text">Editar Perfil</div>
+        <a href="profile-page.html" style="text-decoration: none;">
+          <div class="ok-button">OK</div>
+        </a>
+    </div>
+
+    <div class="form-container">
+        <form>
+            <div class="form-group">
+                <label for="bio">Biografía</label>
+                <textarea id="bio" placeholder="Escribe algo sobre ti..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="height">Altura (cm)</label>
+                <input type="number" id="height" placeholder="Tu altura en cm">
+            </div>
+            <div class="form-group">
+                <label for="city">Ciudad</label>
+                <input type="text" id="city" placeholder="Dónde vives">
+            </div>
+            <div class="form-group">
+                <label for="interests">Intereses</label>
+                <input type="text" id="interests" placeholder="Tus intereses">
+            </div>
+            <div class="form-group">
+                <label for="preferences">Preferencias sexuales</label>
+                <select id="preferences">
+                    <option value="">Selecciona una opción</option>
+                    <option value="heterosexual">Heterosexual</option>
+                    <option value="homosexual">Homosexual</option>
+                    <option value="bisexual">Bisexual</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lifestyle">Estilo de vida</label>
+                <input type="text" id="lifestyle" placeholder="Ej: saludable, fiestero, etc.">
+            </div>
+            <div class="form-group">
+                <label>Preferencias de edad</label>
+                <div class="age-range-container">
+                    <input type="range" id="min-age" class="range-slider" min="18" max="99" value="18">
+                    <input type="range" id="max-age" class="range-slider" min="18" max="99" value="29">
+                    <span id="age-display">18 - 29</span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const minAge = document.getElementById("min-age");
+        const maxAge = document.getElementById("max-age");
+        const ageDisplay = document.getElementById("age-display");
+
+        function updateAgeDisplay() {
+            let minValue = parseInt(minAge.value);
+            let maxValue = parseInt(maxAge.value);
+            if (minValue > maxValue) {
+                minAge.value = maxValue;
+                minValue = maxValue;
+            }
+            ageDisplay.textContent = `${minValue} - ${maxValue}`;
+        }
+        minAge.addEventListener("input", updateAgeDisplay);
+        maxAge.addEventListener("input", updateAgeDisplay);
+    </script>
+</body>
+</html>

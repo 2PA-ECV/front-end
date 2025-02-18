@@ -30,7 +30,7 @@
       <p>Añadir amigos</p>
     </div>
     <div class="action">
-      <i class="fas fa-pen"></i>
+      <i id="editProfileBtn" class="fas fa-pen"></i>
       <p>Editar perfil</p>
     </div>
     <div class="action">
@@ -71,6 +71,7 @@
   const closeModal = document.getElementById("closeModal");
   const addFriendBtn = document.getElementById("addFriendBtn");
   const addPhotoBtn = document.getElementById("addPhotoBtn");
+  const editProfileBtn = document.getElementById("editProfileBtn");
 
   addFriendBtn.addEventListener("click", () => modal.style.display = "flex");
   closeModal.addEventListener("click", () => modal.style.display = "none");
@@ -97,6 +98,11 @@
   addPhotoBtn.addEventListener('click', (event) => {
             event.preventDefault(); 
             window.location.href = 'add-photos.html';
+        });
+
+  editProfileBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            window.location.href = 'edit-profile.html';
         });
   </script>
 </body>
