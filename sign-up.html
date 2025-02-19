@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -22,30 +23,30 @@
             <button><i class="fab fa-apple"></i> Continuar con Apple</button>
         </div>
         <div class="divider"></div>
-        <form>
+        <form id="signup-form">
             <div class="form-group">
                 <label for="name">Nombre completo</label>
-                <input type="text" id="name" placeholder="Tu nombre completo">
+                <input type="text" id="name" placeholder="Tu nombre completo" required>
             </div>
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
-                <input type="email" id="email" placeholder="Correo electrónico">
+                <input type="email" id="email" placeholder="Correo electrónico" required>
             </div>
             <div class="form-group">
                 <label for="username">Nombre de usuario</label>
-                <input type="text" id="username" placeholder="Nombre de usuario">
+                <input type="text" id="username" placeholder="Nombre de usuario" required>
             </div>
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" placeholder="Contraseña">
+                <input type="password" id="password" placeholder="Contraseña" required>
             </div>
             <div class="form-group">
                 <label for="dob">Fecha de nacimiento</label>
-                <input type="date" id="dob">
+                <input type="date" id="dob" required>
             </div>
             <div class="form-group">
                 <label for="gender">Género</label>
-                <select id="gender">
+                <select id="gender" required>
                     <option value="">Selecciona tu género</option>
                     <option value="male">Masculino</option>
                     <option value="female">Femenino</option>
@@ -55,7 +56,7 @@
             </div>
             <div class="form-group">
                 <label for="city">Ciudad</label>
-                <input type="text" id="city" placeholder="Ciudad">
+                <input type="text" id="city" placeholder="Ciudad" required>
             </div>
             <button type="submit" class="signup-button">Registrarse</button>
         </form>
@@ -63,8 +64,60 @@
             <p>¿Ya tienes cuenta? <a href="/login.html">Inicia sesión en 2 PA</a></p>
         </div>
     </div>
+
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function(event) {
+            event.preventDefault(); 
+            
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const dob = document.getElementById("dob").value.trim();
+            const gender = document.getElementById("gender").value;
+            const city = document.getElementById("city").value.trim();
+
+            if (!name || !email || !username || !password || !dob || !gender || !city) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert("Por favor, introduce un correo electrónico válido.");
+                return;
+            }
+
+        
+            if (password.length < 6) {
+                alert("La contraseña debe tener al menos 6 caracteres.");
+                return;
+            }
+
+            try {
+                
+                const response = await fetch("http://localhost:3000/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name, email, username, password, dob, gender, city })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Error en el registro.");
+                }
+
+                alert("Registro exitoso. Redirigiendo...");
+                localStorage.setItem("token", data.token);
+                window.location.href = "like-page.html"; 
+            } catch (error) {
+                console.error("Error en el registro:", error);
+                alert(error.message);
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
