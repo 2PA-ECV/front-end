@@ -20,7 +20,6 @@ document.getElementById("signup-form").addEventListener("submit", async function
         return;
     }
 
-    // Validar longitud mínima de la contraseña
     if (password.length < 6) {
         alert("La contraseña debe tener al menos 6 caracteres.");
         return;

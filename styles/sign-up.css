@@ -74,6 +74,7 @@ body {
 .form-group {
     text-align: left;
     margin-bottom: 20px;
+    margin-right: 40px;
 }
 
 .form-group label {
