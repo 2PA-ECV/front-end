@@ -25,26 +25,27 @@ document.getElementById("signup-form").addEventListener("submit", async function
         return;
     }
 
-    console.log({ name, email, username, password, dob, gender, city });
+    console.log({ name, username, email, password, dob, gender, city });
+
+    userData = { name, username, email, password, dob, gender, city };
 
     try {
-        
-        const response = await fetch("http://172.201.217.153:3000/auth/register", {
+        fetch("http://localhost:3000/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ name, email, username, password, dob, gender, city })
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())  // Parseamos la respuesta a JSON
+        .then(data => {
+            console.log("Usuario registrado:", data);  // Aquí manejamos la respuesta exitosa
+        })
+        .catch(error => {
+            console.error("Error al registrar usuario:", error);  // Manejamos errores si ocurren
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Error en el registro.");
-        }
-
-        alert("Registro exitoso. Redirigiendo...");
-        localStorage.setItem("token", data.token);
+        //localStorage.setItem("token", data.token);
         window.location.href = "like-page.html"; 
 
     } catch (error) {
