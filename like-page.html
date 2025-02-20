@@ -33,59 +33,94 @@
   </div>
   
   <div class="profile-container">
-    <div class="image-progress">
+    <div class="cards">
+      <div class="image-progress">
+      </div>
+      <img src="images/lucas.png" class="profile-image">
+      <div class="profile-details">
+        <h1>Lucas <span class="age">20</span></h1>
+        <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+        <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+      </div>
     </div>
-    <img src="images/lucas.png" class="profile-image">
-    <div class="profile-details">
-      <h1>Lucas <span class="age">20</span></h1>
-      <p class="bio"><i class="fas fa-search"></i> Busco...</p>
-      <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+    <div class="cards">
+      <div class="image-progress">
+      </div>
+      <img src="images/xino.jpg" class="profile-image">
+      <div class="profile-details">
+        <h1>Xino <span class="age">43</span></h1>
+        <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+        <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+      </div>
     </div>
   </div>
   <script>
-    const profileImage = document.querySelector('.profile-image');
-    const imageProgressContainer = document.querySelector('.image-progress');
-    let currentIndex = 0;
-    const images = [
-        "images/lucas.png",
-        "images/lucas2.png",
-    ];
+    let isAnimationRunning = false;
+    let pullDeltax = 0;
+    const DECISION_THRESHOLD = 100
 
-    function generateProgressBars() {
-      imageProgressContainer.innerHTML = '';
-      images.forEach(() => {
-        const progressBar = document.createElement('div');
-        progressBar.classList.add('progress-bar');
-        const fill = document.createElement('div');
-        fill.classList.add('fill');
-        progressBar.appendChild(fill);
-        imageProgressContainer.appendChild(progressBar);
-      });
-    }
+    function onSwipe (event) {
+      if (isAnimationRunning) return
 
-    function updateProgress() {
-      const progressBars = document.querySelectorAll('.progress-bar .fill');
-      progressBars.forEach((bar, index) => {
-        bar.style.width = index === currentIndex ? "100%" : "0%";
-      });
-    }
+      const actualCard = event.target.closest('.cards')
+      const startX = event.clientX ?? event.touches[0].pageX
 
-    document.querySelector('.profile-container').addEventListener('click', (event) => {
-        const containerWidth = event.currentTarget.clientWidth;
-        const clickX = event.clientX;
+      function onMove (event) {
+        const currentX = event.pageX ?? event.touches[0].pageX
 
-        if (clickX > containerWidth / 2) {
-            currentIndex = (currentIndex + 1) % images.length;
-        } else {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
+        pullDeltax = currentX - startX
+
+        console.log(pullDeltax)
+        if (pullDeltax == 0) {
+          return
         }
+        isAnimationRunning = true
+        const deg = pullDeltax / 15
+        actualCard.style.transform = `translateX(${pullDeltax}px) rotate(${deg}deg)`
+        actualCard.style.cursor = 'grabbing'
+      }
 
-        profileImage.src = images[currentIndex];
-        updateProgress();
-    });
+      function onEnd (event) {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onEnd)
 
-    generateProgressBars();
-    updateProgress();
+      document.removeEventListener('touchmove', onMove)
+      document.removeEventListener('touchend', onEnd)
+      
+      const decision = Math.abs(pullDeltax) >= DECISION_THRESHOLD
+
+      if (decision) {
+        const goRight = pullDeltax >= 0
+        const goLeft = !goRight
+        actualCard.classList.add(goRight ? 'go-right' : 'go-left')
+        actualCard.addEventListener('transitionend', () => {
+          actualCard.remove()}, {once:true})
+      } else {
+        actualCard.classList.add('reset')
+        actualCard.classList.remove('go-right', 'go-left')
+        console.log("pensando")
+      }
+
+      actualCard.addEventListener('transitionend', () => {
+        actualCard.removeAttribute('style')
+        actualCard.classList.remove('reset')
+
+        pullDeltax = 0
+        isAnimationRunning = false
+      })
+    }
+
+      document.addEventListener('mousemove', onMove)
+      document.addEventListener('mouseup', onEnd)
+
+      document.addEventListener('touchmove', onMove, {passive: true})
+      document.addEventListener('touchend', onEnd, {passive: true})
+    }
+
+
+    document.addEventListener('mousedown', onSwipe)
+    document.addEventListener('touchstart', onSwipe, {passive: true})
+
   </script>
 </body>
 </html>
