@@ -45,7 +45,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
         alert("Registro exitoso. Redirigiendo...");
         localStorage.setItem("token", data.token);
-        window.location.href = "like-page.html"; 
+        window.location.href = "login.html"; 
 
     } catch (error) {
         console.error("Error en el registro:", error);
