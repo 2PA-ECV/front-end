@@ -44,9 +44,8 @@ document.getElementById("signup-form").addEventListener("submit", async function
         .catch(error => {
             console.error("Error al registrar usuario:", error);  // Manejamos errores si ocurren
         });
-
-        //localStorage.setItem("token", data.token);
-        window.location.href = "like-page.html"; 
+        alert("Usuario registrado correctamente. Inicia sesión.")
+        window.location.href = "login.html"; 
 
     } catch (error) {
         console.error("Error en el registro:", error);

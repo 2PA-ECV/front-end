@@ -30,6 +30,8 @@ document.getElementById("login-form").addEventListener("submit", async function(
 
         if (data.token) {
             localStorage.setItem("token", data.token);
+            const decodedToken = jwt_decode(data.token);
+            localStorage.setItem("user_id", decodedToken.id);  // Almacenamos el user_id extraído del token
             window.location.href = "like-page.html"; 
         }
 
