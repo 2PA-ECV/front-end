@@ -8,119 +8,56 @@
   <link rel="stylesheet" href="styles/like-page.css">
 </head>
 <body>
-  <div class="header">
-    <div class="left-section">
-      <img src="images/2pa-logo.png" class="logo">
-      <div class="text">2 PA</div>
+  <section>
+    <div class="header">
+      <div class="left-section">
+        <img src="images/2pa-logo.png" class="logo">
+        <div class="text">2 PA</div>
+      </div>
+      <a href="index.html" class="logout-btn">Cerrar sesión</a>
     </div>
-    <a href="index.html" class="logout-btn">Cerrar sesión</a>
-  </div>
 
-  <div class="actions-container">
-    <div class="actions">
-      <a href="#" class="action dislike"><i class="fas fa-times"></i></a> 
-      <a href="#" class="action likes"><i class="fas fa-heart"></i></a>
-      <a href="#" class="action super-like"><i class="fas fa-star"></i></a>
+    <div class="profile-container">
+      <article>
+        <div class="image-progress"></div>
+        <img src="images/lucas.png" class="profile-image">
+        <div class="profile-details">
+          <h1>Lucas <span class="age">20</span></h1>
+          <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+          <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+        </div>
+        <div class="choice nope">NOPE</div>
+        <div class="choice like">LIKE</div>
+      </article>
+      <article>
+        <div class="image-progress"></div>
+        <img src="images/lucas.png" class="profile-image">
+        <div class="profile-details">
+          <h1>Lucas <span class="age">28</span></h1>
+          <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+          <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+        </div>
+        <div class="choice nope">NOPE</div>
+        <div class="choice like">LIKE</div>
+      </article>
     </div>
-  </div>
-  
-  <div class="navigation-container">
-    <div class="navigation">
-      <a href="#" class="nav-item"><i class="fas fa-house"></i></a>
-      <a href="message-page.html" class="nav-item"><span class="nav-item comments"><i class="fas fa-comment"></i></span></a>
-      <a href="profile-page.html" class="nav-item"><i class="fas fa-user"></i></a>
-    </div>
-  </div>
-  
-  <div class="profile-container">
-    <div class="cards">
-      <div class="image-progress">
-      </div>
-      <img src="images/lucas.png" class="profile-image">
-      <div class="profile-details">
-        <h1>Lucas <span class="age">20</span></h1>
-        <p class="bio"><i class="fas fa-search"></i> Busco...</p>
-        <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
-      </div>
-    </div>
-    <div class="cards">
-      <div class="image-progress">
-      </div>
-      <img src="images/xino.jpg" class="profile-image">
-      <div class="profile-details">
-        <h1>Xino <span class="age">43</span></h1>
-        <p class="bio"><i class="fas fa-search"></i> Busco...</p>
-        <p class="bio"><span class="emoji">🤔</span> Aún no lo tengo claro</p>
+
+    <div class="actions-container">
+      <div class="actions">
+        <a href="#" class="action dislike"><i class="fas fa-times"></i></a> 
+        <a href="#" class="action likes"><i class="fas fa-heart"></i></a>
+        <a href="#" class="action super-like"><i class="fas fa-star"></i></a>
       </div>
     </div>
-  </div>
-  <script>
-    let isAnimationRunning = false;
-    let pullDeltax = 0;
-    const DECISION_THRESHOLD = 100
-
-    function onSwipe (event) {
-      if (isAnimationRunning) return
-
-      const actualCard = event.target.closest('.cards')
-      const startX = event.clientX ?? event.touches[0].pageX
-
-      function onMove (event) {
-        const currentX = event.pageX ?? event.touches[0].pageX
-
-        pullDeltax = currentX - startX
-
-        console.log(pullDeltax)
-        if (pullDeltax == 0) {
-          return
-        }
-        isAnimationRunning = true
-        const deg = pullDeltax / 15
-        actualCard.style.transform = `translateX(${pullDeltax}px) rotate(${deg}deg)`
-        actualCard.style.cursor = 'grabbing'
-      }
-
-      function onEnd (event) {
-      document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseup', onEnd)
-
-      document.removeEventListener('touchmove', onMove)
-      document.removeEventListener('touchend', onEnd)
-      
-      const decision = Math.abs(pullDeltax) >= DECISION_THRESHOLD
-
-      if (decision) {
-        const goRight = pullDeltax >= 0
-        const goLeft = !goRight
-        actualCard.classList.add(goRight ? 'go-right' : 'go-left')
-        actualCard.addEventListener('transitionend', () => {
-          actualCard.remove()}, {once:true})
-      } else {
-        actualCard.classList.add('reset')
-        actualCard.classList.remove('go-right', 'go-left')
-        console.log("pensando")
-      }
-
-      actualCard.addEventListener('transitionend', () => {
-        actualCard.removeAttribute('style')
-        actualCard.classList.remove('reset')
-
-        pullDeltax = 0
-        isAnimationRunning = false
-      })
-    }
-
-      document.addEventListener('mousemove', onMove)
-      document.addEventListener('mouseup', onEnd)
-
-      document.addEventListener('touchmove', onMove, {passive: true})
-      document.addEventListener('touchend', onEnd, {passive: true})
-    }
-
-
-    document.addEventListener('mousedown', onSwipe)
-    document.addEventListener('touchstart', onSwipe, {passive: true})
-
-  </script>
+    
+    <div class="navigation-container">
+      <div class="navigation">
+        <a href="#" class="nav-item"><i class="fas fa-house"></i></a>
+        <a href="message-page.html" class="nav-item"><span class="nav-item comments"><i class="fas fa-comment"></i></span></a>
+        <a href="profile-page.html" class="nav-item"><i class="fas fa-user"></i></a>
+      </div>
+    </div>
+  </section>
+  <script src="scripts/swipe.js"></script>
 </body>
 </html>
