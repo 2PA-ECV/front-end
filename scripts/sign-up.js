@@ -30,7 +30,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
     userData = { name, username, email, password, dob, gender, city };
 
     try {
-        fetch("http://localhost:3000/auth/register", {
+        fetch("http://20.90.161.106:3000/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
