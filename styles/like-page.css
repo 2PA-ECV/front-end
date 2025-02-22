@@ -107,15 +107,15 @@ section {
 }
 
 .actions .action.super-like {
-  color: #4caf50;
+  color: #2fbdff;
 }
 
 .actions .action.dislike {
-  color: #ff0000;
+  color: #ff0000; 
 }
 
 .actions .action.likes {
-  color: #2fbdff;
+  color: #63ff68;
 }
 
 
@@ -251,16 +251,16 @@ article {
 }
 
 .choice.nope {
-  border-color: #ff6e63;
-  color: #ff6e63;
+  border-color: #ff0000;
+  color: #ff0000;
   transform: rotate(30deg);
-  right: 55px;
+  right: 400px;
 }
 
 .choice.like {
   border-color: #63ff68;
   color: #63ff68;
-  left: 55px;
+  left: 400px;
   transform: rotate(-30deg);
 }
 

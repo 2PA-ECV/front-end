@@ -41,7 +41,7 @@ function startDrag(event) {
 
     actualCard.style.cursor = 'grabbing'
 
-    const opacity = Math.abs(pullDeltaX) / 100
+    const opacity = Math.abs(pullDeltaX) / 300
     const isRight = pullDeltaX > 0
 
     const choiceEl = isRight
