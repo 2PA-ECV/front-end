@@ -11,7 +11,14 @@ function startDrag(event) {
 
   const startX = event.pageX ?? event.touches[0].pageX
 
+  const nextCard = actualCard.nextElementSibling;
+  if (nextCard) {
+    nextCard.style.visibility = 'visible';
+    nextCard.style.zIndex = 1;
+  }
+
   actualCard.style.cursor = 'grabbing';
+  actualCard.style.zIndex = 100;
 
   document.addEventListener('mousemove', onMove)
   document.addEventListener('mouseup', onEnd)
@@ -59,18 +66,24 @@ function startDrag(event) {
     if (decisionMade) {
       const goRight = pullDeltaX >= 0
 
-      actualCard.classList.add(goRight ? 'go-right' : 'go-left')
-      actualCard.addEventListener('transitionend', () => actualCard.remove())
+      actualCard.classList.add(goRight ? 'go-right' : 'go-left');
+      actualCard.addEventListener('transitionend', () => {
+        actualCard.remove();
+        
+        if (nextCard) {
+          nextCard.style.visibility = 'visible';
+        }
+      });
 
     } else {
-      actualCard.classList.add('reset')
-      actualCard.style.cursor = 'grab'
+      actualCard.classList.add('reset');
+      actualCard.style.cursor = 'grab';
 
-      actualCard.classList.remove('go-right', 'go-left')
+      actualCard.classList.remove('go-right', 'go-left');
 
       actualCard.querySelectorAll('.choice').forEach(choice => {
         choice.style.opacity = 0
-      })
+      });
     }
 
     actualCard.addEventListener('transitionend', () => {

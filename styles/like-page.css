@@ -177,6 +177,10 @@ section {
   z-index: 100;
 }
 
+.profile-container article:nth-child(n+2) {
+  visibility: hidden;
+}
+
 article {
   position: absolute;
   top: 0;
@@ -203,7 +207,7 @@ article {
   bottom: 0;
   padding: 20px;
   text-align: left;
-  z-index: 20;
+  z-index: 1;
   width: fit-content;
 }
 
