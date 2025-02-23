@@ -197,3 +197,32 @@ document.querySelector('.profile-container').addEventListener('click', (event) =
   profileImage.src = images[currentIndex];
   updateProgress();
 });
+
+document.querySelector('.action.dislike').addEventListener('click', () => handleSwipe(false));
+document.querySelector('.action.likes').addEventListener('click', () => handleSwipe(true));
+
+function handleSwipe(isLike) {
+    if (isAnimating) return; 
+
+    const actualCard = document.querySelector('.profile-container article');
+    if (!actualCard) return;
+
+    isAnimating = true;
+    const direction = isLike ? 'go-right' : 'go-left';
+    const choiceEl = actualCard.querySelector(isLike ? '.choice.like' : '.choice.nope');
+
+    if (choiceEl) {
+        choiceEl.style.opacity = 1;
+    }
+
+    actualCard.style.transition = 'transform 0.4s ease-out';
+    actualCard.style.transform = `translateX(${isLike ? 900 : -900}px) rotate(${isLike ? 30 : -30}deg)`;
+
+    setTimeout(() => {
+        actualCard.remove();
+        loadNextUser();
+        isAnimating = false;
+    }, 600);
+}
+
+
