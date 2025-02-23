@@ -69,7 +69,7 @@ function startDrag(event) {
       actualCard.classList.add(goRight ? 'go-right' : 'go-left');
       actualCard.addEventListener('transitionend', () => {
         actualCard.remove();
-        loadNextUser();
+        //loadNextUser();
         
         if (nextCard) {
           nextCard.style.visibility = 'visible';
@@ -108,6 +108,7 @@ const profileImage = document.querySelector('.profile-image');
 const imageProgressContainer = document.querySelector('.image-progress');
 let currentIndex = 0;
 const images = [];
+let currentUserId = null
 
 function generateProgressBars() {
   imageProgressContainer.innerHTML = '';
@@ -133,10 +134,15 @@ function updateProgress() {
 
 async function loadUserPhotos(userId) {
   try {
-      const photosResponse = await fetch(`/photos/${userId}`);
-      if (!photosResponse.ok) throw new Error('Error al obtener las fotos');
+      const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+      });
+      if (!response.ok) throw new Error('Error al obtener las fotos');
 
-      const photos = await photosResponse.json();
+      const photos = await response.json();
       console.log('Fotos obtenidas:', photos);
       
       images.length = 0;
@@ -154,7 +160,12 @@ async function loadUserPhotos(userId) {
 
 async function loadNextUser() {
   try {
-      const response = await fetch('/users/next-user'); 
+      const response = await fetch('http://20.90.161.106:3000/users/next-user', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+      });
       if (!response.ok) throw new Error('Error al obtener el próximo usuario');
 
       const user = await response.json();
