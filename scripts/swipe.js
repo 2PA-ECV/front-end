@@ -160,7 +160,7 @@ async function loadUserPhotos(userId) {
 
 async function loadNextUser() {
   try {
-      const response = await fetch('http://20.90.161.106:3000/users/next-user', {
+      const response = await fetch('http://20.90.161.106:3000/user/next-user', {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`
