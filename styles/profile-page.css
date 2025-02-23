@@ -181,26 +181,26 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 100;
-  }
+}
 
-  .modal-container {
+.modal-container {
     position: relative;
     background-color: #121212;
     padding: 25px 40px 40px;
     border-radius: 8px;
-    width: 450px;
+    width: 550px;
     text-align: center;
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-  }
+}
 
-  .modal-container h1 {
+.modal-container h1 {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
     color: white;
-  }
+}
 
-  .close-btn {
+.close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -209,19 +209,51 @@ body {
     font-size: 20px;
     color: white;
     cursor: pointer;
-  }
+}
 
-  .close-btn:hover {
+.close-btn:hover {
     color: rgb(253,85,100);
-  }
+}
 
+.modal-header {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
 
-  .hashtag-container, .search-container {
+.tab-btn {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.tab-btn.active {
+    background: linear-gradient(to right, #ff5858, #f857a6);
+}
+
+.tab-btn:hover {
+    background: #444;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+  
+.hashtag-container, .search-container {
     margin-top: 20px;
     text-align: center;
-  }
+}
 
-  .hashtag {
+.hashtag {
     background-color: #222;
     color: #fff;
     padding: 10px;
@@ -229,13 +261,13 @@ body {
     display: inline-block;
     cursor: pointer;
     font-weight: bold;
-  }
+}
 
-  .hashtag:hover {
+.hashtag:hover {
     background-color: #333;
-  }
+}
 
-  .search-container input {
+.search-container input {
     width: 80%;
     padding: 10px;
     margin-top: 10px;
@@ -243,9 +275,9 @@ body {
     border: 1px solid #333;
     background-color: #222;
     color: white;
-  }
+}
 
-  .search-container button {
+.search-container button {
     margin-top: 10px;
     margin-left: 10px;
     padding: 10px 15px;
@@ -254,4 +286,55 @@ body {
     color: white;
     cursor: pointer;
     border-radius: 5px;
-  }
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background: #222;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li button {
+    padding: 5px 10px;
+    background: linear-gradient(to right, #ff5858, #f857a6);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+ul li button:hover {
+    background: #ff6b6b;
+}
+
+ul li:hover {
+    background: #333;
+}
+
+
+ul li button.accept {
+    background-image: linear-gradient(to right, #9cecfb, #65c7f7, #0052d4);
+    margin-right: 5px;
+}
+
+ul li button.decline {
+    background: linear-gradient(to right, #f857a6, #ff5858);
+}
+
+ul li button.accept:hover {
+    background: #45a1e7;
+}
+
+ul li button.decline:hover {
+    background: #ff3f3f;
+}

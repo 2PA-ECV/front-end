@@ -50,60 +50,137 @@
   <div class="modal-bg" id="modal">
     <div class="modal-container">
       <button class="close-btn" id="closeModal">&times;</button>
-      <h1>Añadir Amigos</h1>
-  
-      <div class="hashtag-container">
-        <p>Tu hashtag:</p>
-        <div class="hashtag" id="userHashtag" onclick="copyHashtag()">#LucasAndreu20</div>
-        <p id="copyMessage" style="display: none; color: #36D1DC;">¡Copiado!</p>
+      <h1>Gestionar Amistades</h1>
+
+      <div class="modal-header">
+        <button class="tab-btn active" onclick="showSection('addFriends')">Añadir Amigos</button>
+        <button class="tab-btn" onclick="showSection('pendingRequests')">Solicitudes Pendientes</button>
+        <button class="tab-btn" onclick="showSection('friendsList')">Lista de Amigos</button>
       </div>
-  
-      <div class="search-container">
-        <p>Buscar un amigo por hashtag:</p>
-        <input type="text" id="searchHashtag" placeholder="Ej: #JuanPerez22">
-        <button onclick="searchFriend()">Buscar</button>
+
+      <!-- Búsqueda de nuevos amigos -->
+      <div id="addFriendsSection" class="section active">
+        <div class="hashtag-container">
+          <p>Tu hashtag:</p>
+          <div class="hashtag" id="userHashtag" onclick="copyHashtag()">#LucasAndreu20</div>
+          <p id="copyMessage" style="display: none; color: #36D1DC;">¡Copiado!</p>
+        </div>
+
+        <div class="search-container">
+          <p>Buscar un amigo por hashtag:</p>
+          <input type="text" id="searchHashtag" placeholder="Ej: #JuanPerez22">
+          <button onclick="searchFriend()">Buscar</button>
+        </div>
+      </div>
+
+      <!-- Sección de solicitudes pendientes -->
+      <div id="pendingRequestsSection" class="section">
+        <ul id="pendingRequestsList">
+          <!-- Aquí se llenarán las solicitudes pendientes dinámicamente -->
+          <li class="request">
+            <div class="request-info">
+              <div class="request-name">Carlos García</div>
+              <div class="request-hashtag">#CarlosG12</div>
+            </div>
+            <div class="request-actions">
+              <button class="accept">Aceptar</button>
+              <button class="reject">Rechazar</button>
+            </div>
+          </li>
+          <li class="request">
+            <div class="request-info">
+              <div class="request-name">Ana Martínez</div>
+              <div class="request-hashtag">#AnaM22</div>
+            </div>
+            <div class="request-actions">
+              <button class="accept">Aceptar</button>
+              <button class="reject">Rechazar</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sección de lista de amigos -->
+      <div id="friendsListSection" class="section">
+        <ul id="friendsList">
+          <!-- Aquí se llenarán los amigos dinámicamente -->
+          <li class="friend">
+            <div class="friend-info">
+              <div class="friend-name">Juan Pérez</div>
+              <div class="friend-hashtag">#JuanP22</div>
+            </div>
+            <div class="friend-actions">
+              <button class="remove">Eliminar amigo</button>
+            </div>
+          </li>
+          <li class="friend">
+            <div class="friend-info">
+              <div class="friend-name">Sara López</div>
+              <div class="friend-hashtag">#SaraL32</div>
+            </div>
+            <div class="friend-actions">
+              <button class="remove">Eliminar amigo</button>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
-
   <script>
   const modal = document.getElementById("modal");
-  const closeModal = document.getElementById("closeModal");
-  const addFriendBtn = document.getElementById("addFriendBtn");
-  const addPhotoBtn = document.getElementById("addPhotoBtn");
-  const editProfileBtn = document.getElementById("editProfileBtn");
+    const closeModal = document.getElementById("closeModal");
+    const addFriendBtn = document.getElementById("addFriendBtn");
+    const searchHashtagInput = document.getElementById("searchHashtag");
+    const userHashtag = document.getElementById("userHashtag");
+    const copyMessage = document.getElementById("copyMessage");
 
-  addFriendBtn.addEventListener("click", () => modal.style.display = "flex");
-  closeModal.addEventListener("click", () => modal.style.display = "none");
-  window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+    const addPhotoBtn = document.getElementById("addPhotoBtn");
+    const editProfileBtn = document.getElementById("editProfileBtn");
 
-  function copyHashtag() {
-    const hashtag = document.getElementById("userHashtag").innerText;
-    navigator.clipboard.writeText(hashtag).then(() => {
-      document.getElementById("copyMessage").style.display = "block";
-      setTimeout(() => document.getElementById("copyMessage").style.display = "none", 2000);
+    addFriendBtn.addEventListener("click", () => modal.style.display = "flex");
+    closeModal.addEventListener("click", () => modal.style.display = "none");
+    window.addEventListener("click", (e) => { 
+      if (e.target === modal) modal.style.display = "none"; 
     });
-  }
 
-  function searchFriend() {
-    const hashtag = document.getElementById("searchHashtag").value;
-    if (hashtag.trim() !== "") {
-      alert("Buscando amigo con hashtag: " + hashtag);
-      // search in database
-    } else {
-      alert("Por favor, ingresa un hashtag válido.");
+    addPhotoBtn.addEventListener('click', (event) => {
+      event.preventDefault(); 
+      window.location.href = 'add-photos.html';
+    });
+
+    editProfileBtn.addEventListener('click', (event) => {
+      event.preventDefault(); 
+      window.location.href = 'edit-profile.html';
+    });
+
+    function copyHashtag() {
+      const hashtag = userHashtag.innerText;
+      navigator.clipboard.writeText(hashtag).then(() => {
+        copyMessage.style.display = "block";
+        setTimeout(() => copyMessage.style.display = "none", 2000);
+      });
     }
-  }
 
-  addPhotoBtn.addEventListener('click', (event) => {
-            event.preventDefault(); 
-            window.location.href = 'add-photos.html';
-        });
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+        sec.classList.remove('active');
+      });
 
-  editProfileBtn.addEventListener('click', (event) => {
-            event.preventDefault(); 
-            window.location.href = 'edit-profile.html';
-        });
+      const activeSection = document.getElementById(`${section}Section`);
+      if (activeSection) {
+        activeSection.style.display = 'block';
+        activeSection.classList.add('active');
+      }
+
+      document.querySelectorAll('.tab-btn').forEach(tab => tab.classList.remove('active'));
+      const activeTab = document.querySelector(`button[onclick="showSection('${section}')"]`);
+      if (activeTab) {
+        activeTab.classList.add('active');
+      }
+    }
+
+    showSection('addFriends');
   </script>
 </body>
 </html>
