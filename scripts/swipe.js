@@ -135,6 +135,7 @@ function renderUser(user) {
   const profileContainer = document.querySelector('.profile-container');
 
   const article = document.createElement('article');
+  article.dataset.userId = user.user_id;
   article.innerHTML = `
       <div class="image-progress"></div>
       <img src="" class="profile-image">
@@ -153,7 +154,7 @@ function renderUser(user) {
 
     article.style.visibility = 'hidden';  
     profileContainer.appendChild(article);
-    loadUserPhotos(user.id, article);
+    loadUserPhotos(user.user_id, article);
 
     setTimeout(() => {
         article.style.visibility = 'visible';
@@ -176,7 +177,19 @@ async function loadUserPhotos(userId, article) {
       const photos = await response.json();
       console.log('Fotos obtenidas:', photos);
 
-      const images = photos.length > 0 ? photos.map(photo => photo.photo_url) : ['images/default.png'];
+      const images = await Promise.all(photos.length > 0 ? photos.map(async (photo) => {
+        if (photo.photo_url.startsWith('http')) {
+          return photo.photo_url;
+        }  
+        const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
+              headers: {
+                  'Authorization': `Bearer ${localStorage.getItem("token")}`
+              }
+          });
+          if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
+          return URL.createObjectURL(await fetchResponse.blob());
+      }) : ['images/default.png']);
+
       let currentIndex = 0;
 
       const profileImage = article.querySelector('.profile-image');
@@ -187,21 +200,31 @@ async function loadUserPhotos(userId, article) {
       
       article.style.visibility = 'visible';
 
+      let isChangingPhoto = false; // Flag para evitar múltiples clics
+
       article.addEventListener('click', (event) => {
+        if (isChangingPhoto) return; // Si ya está cambiando la foto, no hacer nada
+
+        isChangingPhoto = true; // Activar el flag
+
         const containerWidth = article.clientWidth;
         const clickX = event.clientX;
-  
+
         if (clickX > containerWidth / 2) {
-          currentIndex = (currentIndex + 1) % images.length;
+            currentIndex = (currentIndex + 1) % images.length;
         } else {
-          currentIndex = (currentIndex - 1 + images.length) % images.length;
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
         }
-  
+
         profileImage.src = images[currentIndex];
         updateProgress(article, currentIndex, images);
-      });
+
+        setTimeout(() => {
+            isChangingPhoto = false; // Desactivar el flag después de la animación
+        }, 300); // Tiempo de la animación
+    });
   } catch (error) {
-      console.error(error);
+      console.error('Error al cargar las fotos:', error);
   }
 }
 
@@ -223,37 +246,95 @@ function updateProgress(article, currentIndex, images) {
   const progressBars = article.querySelectorAll('.progress-bar .fill');
   progressBars.forEach((bar, index) => {
       bar.style.width = index === currentIndex ? "100%" : "0%";
+      bar.style.transition = 'width 0.3s ease-in-out'; // Añadir transición suave
   });
 
   const profileImage = article.querySelector('.profile-image');
   profileImage.src = images[currentIndex];
 }
 
-document.querySelector('.action.dislike').addEventListener('click', () => handleSwipe(false));
-document.querySelector('.action.likes').addEventListener('click', () => handleSwipe(true));
+document.querySelector('.action.dislike').addEventListener('click', () => {
+  const actualCard = document.querySelector('.profile-container article');
+  handleSwipe(false, actualCard);
+});
 
-function handleSwipe(isLike) {
-    if (isAnimating) return; 
+document.querySelector('.action.likes').addEventListener('click', () => {
+  const actualCard = document.querySelector('.profile-container article');
+  handleSwipe(true, actualCard);
+});
 
-    const actualCard = document.querySelector('.profile-container article');
-    if (!actualCard) return;
 
-    isAnimating = true;
-    const direction = isLike ? 'go-right' : 'go-left';
-    const choiceEl = actualCard.querySelector(isLike ? '.choice.like' : '.choice.nope');
+async function handleSwipe(isLike, actualCard) {
+  if (isAnimating) return;
 
-    if (choiceEl) {
-        choiceEl.style.opacity = 1;
-    }
+  if (!actualCard) return;
 
-    actualCard.style.transition = 'transform 0.4s ease-out';
-    actualCard.style.transform = `translateX(${isLike ? 900 : -900}px) rotate(${isLike ? 30 : -30}deg)`;
+  isAnimating = true;
+  const direction = isLike ? 'go-right' : 'go-left';
+  const choiceEl = actualCard.querySelector(isLike ? '.choice.like' : '.choice.nope');
 
-    setTimeout(() => {
-        actualCard.remove();
-        loadNextUser();
-        isAnimating = false;
-    }, 600);
+  if (choiceEl) {
+      choiceEl.style.opacity = 1;
+  }
+
+  actualCard.style.transition = 'transform 0.4s ease-out';
+  actualCard.style.transform = `translateX(${isLike ? 900 : -900}px) rotate(${isLike ? 30 : -30}deg)`;
+
+  // Obtener el ID del usuario que se está dando like
+  const userId = actualCard.dataset.userId;
+  console.log("ID:", userId);
+
+  if (isLike) {
+      try {
+          // Enviar el like al servidor
+          const likeResponse = await fetch('http://20.90.161.106:3000/likes', {
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  likedUserId: userId,
+                  action: 'like'
+              })
+          });
+
+          if (!likeResponse.ok) throw new Error('Error al enviar el like');
+
+          const likeData = await likeResponse.json();
+          console.log('Like enviado:', likeData);
+
+          // Verificar si hay un match
+          const matchResponse = await fetch('http://20.90.161.106:3000/matches/check', {
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  likedUserId: userId
+              })
+          });
+
+          if (!matchResponse.ok) throw new Error('Error al verificar el match');
+
+          const matchData = await matchResponse.json();
+          console.log('Respuesta de match:', matchData);
+
+          if (matchData.message === 'Match creado') {
+              alert('¡Tienes un nuevo match!');
+          }
+
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  }
+
+  setTimeout(() => {
+      actualCard.remove();
+      loadNextUser();
+      isAnimating = false;
+  }, 600);
 }
 
 

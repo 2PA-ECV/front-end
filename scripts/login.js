@@ -18,23 +18,17 @@ document.getElementById("login-form").addEventListener("submit", async function(
             body: JSON.stringify({ emailorusername, password })
         });
 
+        const data = await response.json();
+
         if (response.ok) {
             alert("Login exitoso");
             if (data.token) localStorage.setItem("token", data.token);
-        } else {
-            alert("Error: " + data.message);
-        }
-
-        const data = await response.json();
-        alert("Login exitoso");
-
-        if (data.token) {
-            localStorage.setItem("token", data.token);
-            const decodedToken = jwt_decode(data.token);
-            localStorage.setItem("user_id", decodedToken.id);  // Almacenamos el user_id extraído del token
             window.location.href = "like-page.html"; 
+        } else {
+            alert("Credenciales incorrectas, inténtalo de nuevo");
         }
 
+        
     } catch (error) {
         console.error("Error en login:", error);
         alert(error.message);

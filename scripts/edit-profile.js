@@ -17,7 +17,7 @@ async function loadProfile() {
         });
 
         if (!response.ok) {
-            throw new Error("No se pudo obtener el perfil");
+            throw new Error("No se pudo obtener el perfil / Perfil no creado");
         }
 
         const data = await response.json();
@@ -58,6 +58,11 @@ async function saveProfile() {
     const min_age_preference = document.getElementById("min-age").value;
     const max_age_preference = document.getElementById("max-age").value;
     const preferred_city = document.getElementById("city").value.trim();
+    const altura = document.getElementById("height").value;
+    const preferences = document.getElementById("preferences").value;
+    const lifestyle = document.getElementById("lifestyle").value;
+    
+    userProfile ={ bio, interests, min_age_preference, max_age_preference, preferred_city, altura, lifestyle, preferences };
 
     if (!bio || !interests || !min_age_preference || !max_age_preference || !preferred_city) {
         alert("Por favor, completa todos los campos.");
@@ -71,7 +76,7 @@ async function saveProfile() {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ bio, interests, min_age_preference, max_age_preference, preferred_city }),
+            body: JSON.stringify(userProfile),
         });
 
         const data = await response.json();
