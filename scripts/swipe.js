@@ -27,6 +27,8 @@ function startDrag(event) {
   document.addEventListener('touchend', onEnd, { passive: true })
 
   function onMove(event) {
+    event.preventDefault();
+
     const currentX = event.pageX ?? event.touches[0].pageX
 
     pullDeltaX = currentX - startX
@@ -69,7 +71,7 @@ function startDrag(event) {
       actualCard.classList.add(goRight ? 'go-right' : 'go-left');
       actualCard.addEventListener('transitionend', () => {
         actualCard.remove();
-        //loadNextUser();
+        loadNextUser();
         
         if (nextCard) {
           nextCard.style.visibility = 'visible';
@@ -104,58 +106,6 @@ function startDrag(event) {
 document.addEventListener('mousedown', startDrag)
 document.addEventListener('touchstart', startDrag, { passive: true })
 
-const profileImage = document.querySelector('.profile-image');
-const imageProgressContainer = document.querySelector('.image-progress');
-let currentIndex = 0;
-const images = [];
-let currentUserId = null
-
-function generateProgressBars() {
-  imageProgressContainer.innerHTML = '';
-  images.forEach(() => {
-    const progressBar = document.createElement('div');
-    progressBar.classList.add('progress-bar');
-    const fill = document.createElement('div');
-    fill.classList.add('fill');
-    progressBar.appendChild(fill);
-    imageProgressContainer.appendChild(progressBar);
-  });
-}
-
-function updateProgress() {
-  const progressBars = document.querySelectorAll('.progress-bar .fill');
-  progressBars.forEach((bar, index) => {
-    bar.style.width = index === currentIndex ? "100%" : "0%";
-  });
-  if (images.length > 0) {
-    profileImage.src = images[currentIndex];
-  }
-}
-
-async function loadUserPhotos(userId) {
-  try {
-      const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${localStorage.getItem("token")}`
-          }
-      });
-      if (!response.ok) throw new Error('Error al obtener las fotos');
-
-      const photos = await response.json();
-      console.log('Fotos obtenidas:', photos);
-      
-      images.length = 0;
-      photos.forEach(photo => {
-          images.push(photo.photo_url); 
-      });
-
-      generateProgressBars(); 
-      updateProgress(); 
-  } catch (error) {
-      console.error(error);
-  }
-}
 
 
 async function loadNextUser() {
@@ -171,32 +121,99 @@ async function loadNextUser() {
       const user = await response.json();
       console.log("Usuario obtenido:", user);
 
-      if (!user || !user.id) {
+      if (!user || !user.user_id) {
           console.warn("No hay más usuarios disponibles");
           return;
       }
-
-      currentUserId = user.id; 
-      loadUserPhotos(currentUserId); 
+      renderUser(user); 
   } catch (error) {
       console.error(error);
   }
 }
 
+function renderUser(user) {
+  const profileContainer = document.querySelector('.profile-container');
 
-document.querySelector('.profile-container').addEventListener('click', (event) => {
-  const containerWidth = event.currentTarget.clientWidth;
-  const clickX = event.clientX;
+  const article = document.createElement('article');
+  article.innerHTML = `
+      <div class="image-progress"></div>
+      <img src="" class="profile-image">
+      <div class="profile-details">
+          <h1>${user.name} <span class="age">${user.age}</span></h1>
+          <p class="bio"><i class="fas fa-search"></i> ${user.bio}</p>
+      </div>
+      <div class="choice nope">NOPE</div>
+      <div class="choice like">LIKE</div>
+  `;
 
-  if (clickX > containerWidth / 2) {
-      currentIndex = (currentIndex + 1) % images.length;
-  } else {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
+  const previousCard = profileContainer.querySelector('article');
+    if (previousCard) {
+        previousCard.style.visibility = 'hidden'; 
+    }
+
+    article.style.visibility = 'hidden';  
+    profileContainer.appendChild(article);
+    loadUserPhotos(user.id, article);
+
+    setTimeout(() => {
+        article.style.visibility = 'visible';
+        article.style.transition = 'transform 0.3s ease-in';
+        article.style.transform = 'translateX(0)';
+    }, 100);
+}
+
+async function loadUserPhotos(userId, article) {
+  try {
+      const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+      });
+
+      if (!response.ok) throw new Error('Error al obtener las fotos');
+
+      const photos = await response.json();
+      console.log('Fotos obtenidas:', photos);
+
+      const images = photos.length > 0 ? photos.map(photo => photo.photo_url) : ['images/default.png'];
+      let currentIndex = 0;
+
+      const profileImage = article.querySelector('.profile-image');
+      profileImage.src = images[currentIndex];
+
+      generateProgressBars(article, images.length);
+      updateProgress(article, currentIndex, images);
+      
+      article.style.visibility = 'visible';
+  } catch (error) {
+      console.error(error);
   }
+}
 
+function generateProgressBars(article, imageCount) {
+  const progressContainer = article.querySelector('.image-progress');
+  progressContainer.innerHTML = '';
+
+  for (let i = 0; i < imageCount; i++) {
+      const progressBar = document.createElement('div');
+      progressBar.classList.add('progress-bar');
+      const fill = document.createElement('div');
+      fill.classList.add('fill');
+      progressBar.appendChild(fill);
+      progressContainer.appendChild(progressBar);
+  }
+}
+
+function updateProgress(article, currentIndex, images) {
+  const progressBars = article.querySelectorAll('.progress-bar .fill');
+  progressBars.forEach((bar, index) => {
+      bar.style.width = index === currentIndex ? "100%" : "0%";
+  });
+
+  const profileImage = article.querySelector('.profile-image');
   profileImage.src = images[currentIndex];
-  updateProgress();
-});
+}
 
 document.querySelector('.action.dislike').addEventListener('click', () => handleSwipe(false));
 document.querySelector('.action.likes').addEventListener('click', () => handleSwipe(true));
