@@ -186,6 +186,20 @@ async function loadUserPhotos(userId, article) {
       updateProgress(article, currentIndex, images);
       
       article.style.visibility = 'visible';
+
+      article.addEventListener('click', (event) => {
+        const containerWidth = article.clientWidth;
+        const clickX = event.clientX;
+  
+        if (clickX > containerWidth / 2) {
+          currentIndex = (currentIndex + 1) % images.length;
+        } else {
+          currentIndex = (currentIndex - 1 + images.length) % images.length;
+        }
+  
+        profileImage.src = images[currentIndex];
+        updateProgress(article, currentIndex, images);
+      });
   } catch (error) {
       console.error(error);
   }
