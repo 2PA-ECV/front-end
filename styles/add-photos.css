@@ -1,0 +1,201 @@
+:root {
+    --brand-color: linear-gradient(to right, #ff5858, #f857a6, #9cecfb, #65c7f7, #0052d4);
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1c1c1e;
+    border-bottom: 1px solid #333;
+}
+
+.header .text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header .ok-button {
+    background-image: linear-gradient(to right, #ff5858, #f857a6);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.header .ok-button:hover {
+    transform: scale(1.1);
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1c1c1e;
+    border-bottom: 1px solid #333;
+    position: relative;
+}
+
+.tabs .sections {
+    padding: 13px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    transition: border-bottom 0.3s;
+}
+
+.tabs .sections:hover {
+    color: rgb(253,85,100);
+}
+
+.tabs .sections.active {
+    color: rgb(253,85,100);
+    border-bottom: 2px solid rgb(253,85,100);
+}
+
+.tabs .divider {
+    width: 1px;
+    height: 48px;
+    background-color: #333;
+}
+
+.profile-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+    width: 100%;
+    height: calc(100vh - 93px);
+    box-sizing: border-box;
+}
+
+.photo-container {
+    position: relative;
+    border-radius: 10px;
+    background-color: #222;
+    border: 2px solid #fff;
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.photo-container .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    color: #ff6b6b;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    transition: transform 0.3s;
+}
+
+.photo-container .delete-icon:hover {
+    transform: scale(1.1);
+}
+
+.add-photo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    border-radius: 10px;
+    border: 2px dashed #555;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.add-photo:hover {
+    background-color: #333;
+}
+
+.add-photo:hover .plus-btn {
+    transform: scale(1.5);
+}
+
+.profile-container {
+    position: relative;
+    text-align: center;
+  }
+
+.image-progress {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 3;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    margin: 0 3px;
+    background-color: rgba(255, 255, 255, 0.352);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar .fill {
+    height: 100%;
+    background-color: #fff;
+}
+
+.profile-image {
+    width: 100%;
+    height: calc(100vh - 102.5px);
+    object-fit: contain;
+}
+
+.profile-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 20px;
+    text-align: left;
+}
+
+.profile-details h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.profile-details .age {
+    font-size: 20px;
+    font-weight: normal;
+    color: #ccc;
+}
+
+.profile-details .bio {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #ccc;
+}
+
+.profile-details .emoji {
+    font-size: 20px;
+}

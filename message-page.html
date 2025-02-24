@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/message-page.css">
+</head>
+<body>
+  <div class="header">
+    <div class="left-section">
+      <img src="images/2pa-logo.png" class="logo">
+      <div class="text">2 PA</div>
+    </div>
+    <a href="index.html" class="logout-btn">Cerrar sesión</a>
+  </div>
+
+  <div class="matches-container">
+    <h2>Nuevos matches</h2>
+    <div class="matches">
+      <div class="match">
+        <img src="/images/lucas.png" alt="Profile picture of a person with 99+ likes">
+        <div>Claudia</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Sara">
+        <div>Sara</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Ysoline">
+        <div>Ysoline</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Laura">
+        <div>Laura</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Naomy">
+        <div>Naomy</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Eline">
+        <div>Eline</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of Janina">
+        <div>Janina</div>
+      </div>
+      <div class="match">
+        <img src="https://placehold.co/80x120" alt="Profile picture of célia">
+        <div>célia</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages-container">
+    <h2>Mensajes</h2>
+      <div class="message">
+        <img src="/images/lucas.png" alt="Profile picture of Fatou">
+        <div class="info">
+          <div class="name">Claudia</div>
+          <div class="status">¡Haz match ahora!</div>
+        </div>
+        <div class="badge">LE GUSTAS</div>
+      </div>
+  </div>
+
+  <div class="empty-state">
+    <div class="icon"><i class="fas fa-comment-dots"></i></div>
+    <h3>Di hola</h3>
+    <p>Pulsa sobre un nuevo match para enviar un mensaje</p>
+  </div>
+
+  <div class="navigation-container">
+    <div class="navigation">
+      <a href="like-page.html" class="nav-item"><i class="fas fa-house"></i></a>
+      <a href="#" class="nav-item"><span class="nav-item comments"><i class="fas fa-comment"></i></span></a>
+      <a href="profile-page.html" class="nav-item"><i class="fas fa-user"></i></a>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.message').forEach(message => {
+      message.addEventListener('click', () => {
+          window.location.href = 'private-message-page.html'; // Change this URL to your private chat page
+      });
+    });
+
+    document.querySelectorAll('.match').forEach(message => {
+      message.addEventListener('click', () => {
+          window.location.href = 'private-message-page.html'; // Change this URL to your private chat page
+      });
+    });
+
+  </script>
+  <script src="scripts/message.js"></script>
+
+</body>
+</html>
+

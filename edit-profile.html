@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/edit-profile.css">
+</head>
+<body>
+    <div class="header">
+        <span></span>
+        <div class="text">Editar Perfil</div>
+        <a href="profile-page.html" style="text-decoration: none;">
+            <div class="ok-button" onclick="saveProfile()">OK</div>
+        </a>
+    </div>
+
+    <div class="form-container">
+        <form>
+            <div class="form-group">
+                <label for="profile-image">Foto de perfil</label>
+                <label class="profile-picture" for="profile-image">
+                    <input type="file" id="profile-image" accept="image/*" onchange="previewImage(event)">
+                    <img id="image-preview-img" src="images/avatar-default.svg" alt="Profile Picture" />
+                </label>
+            </div>                      
+            <div class="form-group">
+                <label for="bio">Biografía</label>
+                <textarea id="bio" placeholder="Escribe algo sobre ti..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="height">Altura (cm)</label>
+                <input type="number" id="height" placeholder="Tu altura en cm">
+            </div>
+            <div class="form-group">
+                <label for="city">Ciudad</label>
+                <input type="text" id="city" placeholder="Dónde vives">
+            </div>
+            <div class="form-group">
+                <label for="interests">Intereses</label>
+                <input type="text" id="interests" placeholder="Tus intereses">
+            </div>
+            <div class="form-group">
+                <label for="preferences">Preferencias sexuales</label>
+                <select id="preferences">
+                    <option value="">Selecciona una opción</option>
+                    <option value="heterosexual">Heterosexual</option>
+                    <option value="homosexual">Homosexual</option>
+                    <option value="bisexual">Bisexual</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lifestyle">Estilo de vida</label>
+                <input type="text" id="lifestyle" placeholder="Ej: saludable, fiestero, etc.">
+            </div>
+            <div class="form-group">
+                <label>Preferencias de edad</label>
+                <div class="age-range-container">
+                    <input type="range" id="min-age" class="range-slider" min="18" max="99" value="18">
+                    <input type="range" id="max-age" class="range-slider" min="18" max="99" value="29">
+                    <span id="age-display">18 - 29</span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const minAge = document.getElementById("min-age");
+        const maxAge = document.getElementById("max-age");
+        const ageDisplay = document.getElementById("age-display");
+
+        function updateAgeDisplay() {
+            let minValue = parseInt(minAge.value);
+            let maxValue = parseInt(maxAge.value);
+            if (minValue > maxValue) {
+                minAge.value = maxValue;
+                minValue = maxValue;
+            }
+            ageDisplay.textContent = `${minValue} - ${maxValue}`;
+        }
+        minAge.addEventListener("input", updateAgeDisplay);
+        maxAge.addEventListener("input", updateAgeDisplay);
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.getElementById('image-preview-img');
+                img.src = e.target.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+    <script src="scripts/edit-profile.js"></script>
+</body>
+</html>
+
+
