@@ -119,7 +119,7 @@ sudo systemctl start apache2
    ```
    - El repositorio clonado en la carpeta var/www/html
    ```bash
-   git clone https://github.com/tu-repositorio.git
+   git clone https://github.com/2PA-ECV/front-end.git
    ```
 
 2. Inicia el servidor de desarrollo:
