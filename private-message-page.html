@@ -64,6 +64,9 @@
                 socket.emit("joinRoom", matchId);
                 console.log(`Conectado a la sala ${matchId}`);
 
+                // Evitar múltiples listeners eliminando el anterior
+                socket.off("receiveMessage"); 
+
                 // Escuchar mensajes recibidos
                 socket.on("receiveMessage", (messageData) => {
                     console.log("Mensaje recibido:", messageData);
@@ -75,6 +78,7 @@
                 });
             }
         }
+
 
         function sendMessage() {
             const messageInput = document.getElementById("messageInput");
@@ -90,7 +94,6 @@
                     };
 
                     socket.emit("sendMessage", messageData);
-                    addMessageToChat(messageText, "sent"); // Agregar mensaje a la interfaz de usuario
                     messageInput.value = "";
                 }
             });
@@ -118,7 +121,7 @@
         // Cargar usuario del chat dinámicamente
         function loadChatUser() {
             const urlParams = new URLSearchParams(window.location.search);
-            const chatUserName = urlParams.get("name") || "Desconocido";
+            const chatName = urlParams.get("matchId") || "Chat with Match";
             const profilePic = urlParams.get("img") || "https://placehold.co/80x120";
 
             document.getElementById("chatUserName").textContent = chatUserName;

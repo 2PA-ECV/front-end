@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', () => {
+  // Eliminar fotos de prueba del HTML inicial
+  const profileContainer = document.querySelector('.profile-container');
+  profileContainer.innerHTML = '';
+
+  // Cargar el primer usuario dinámico
+  loadNextUser();
+});
+
 const DECISION_THRESHOLD = 300
 
 let isAnimating = false
@@ -194,6 +203,11 @@ async function loadUserPhotos(userId, article) {
 
       const profileImage = article.querySelector('.profile-image');
       profileImage.src = images[currentIndex];
+
+      profileImage.onerror = () => {
+          console.error('Error al cargar la imagen:', images[currentIndex]);
+          profileImage.src = 'images/default.png'; // Imagen por defecto en caso de error
+      };
 
       generateProgressBars(article, images.length);
       updateProgress(article, currentIndex, images);

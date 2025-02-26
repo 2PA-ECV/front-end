@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                           if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
                           return { url: URL.createObjectURL(await fetchResponse.blob()), id: photo.photo_id };
                       })
-                    : [{ url: 'images/default.png', id: null }]
+                    : []
             );
 
             renderPhotos();
@@ -94,14 +94,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
                 });
                 if (!response.ok) throw new Error('Error al eliminar la imagen');
-                images = images.filter(img => img.id !== photoId);
-                renderPhotos();
+                await loadUserPhotos(); // Recargar las fotos después de eliminar
             } catch (error) {
                 console.error('Error al eliminar la imagen:', error);
             }
         });
     }
-
 
     function generateProgressBars() {
         const imageProgressContainer = document.querySelector('.image-progress');
@@ -151,8 +149,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 const data = await response.json();
                 if (data.photo_url) {
-                    images.push({ url: data.photo_url, id: data.id });
-                    renderPhotos();
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Esperar 500ms
+                    await loadUserPhotos(); // Recargar las fotos después de añadir una nueva
                 }
             } catch (error) {
                 console.error('Error al subir la imagen:', error);
@@ -195,7 +193,5 @@ document.addEventListener('DOMContentLoaded', async function () {
         previewSection.style.display = 'block';
     });
 
-    
     await loadUserPhotos();
-    
 });

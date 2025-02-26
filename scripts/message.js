@@ -37,8 +37,9 @@ async function obtenerMatches() {
 
     const userData = await userResponse.json();
     const currentUser = userData.user_id;  // Almacenar el user_id del usuario actual
-
+    
     mostrarMatchesEnHTML(data, currentUser);
+    mostrarMatchesMessageEnHTML(data, currentUser);
 }
 
 async function mostrarMatchesEnHTML(matches, currentUser) {
@@ -139,6 +140,76 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
             matchElement.addEventListener("click", () => abrirChat(match.match_id));
             container.appendChild(matchElement);
         }
+    }
+}
+
+async function mostrarMatchesMessageEnHTML(matches, currentUser) {
+    const messagesContainer = document.querySelector(".messages"); // Seleccionar el contenedor de mensajes
+    messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
+
+    for (const match of matches) {
+        // Crear el contenedor de match
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        
+        // Determinar cuál es el usuario al que corresponde la foto
+        const userId = (match.user_id_1 === currentUser) ? match.user_id_2 : match.user_id_1;
+        
+        try {
+            const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Error al obtener las fotos');
+
+            const photos = await response.json();
+            console.log('Fotos obtenidas:', photos);
+
+            const images = await Promise.all(photos.length > 0 ? photos.map(async (photo) => {
+                if (photo.photo_url.startsWith('http')) {
+                    return photo.photo_url;
+                }
+                const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
+                return URL.createObjectURL(await fetchResponse.blob());
+            }) : ['images/default.png']);
+
+            const profilePicture = images.length > 0 ? images[0] : 'https://placehold.co/80x120';
+
+            // Mantener la estructura de tu mensaje
+            messageElement.innerHTML = `
+                <img src="${profilePicture}" alt="Foto de ${match.match_id}">
+                <div class="info">
+                    <div class="name">${match.match_id}</div>
+                    <div class="status">Empieza la conversación!</div>
+                </div>
+                <div class="badge">LE GUSTAS</div>
+            `;
+
+            
+
+        } catch (error) {
+            console.error('Error al obtener las fotos:', error);
+            messageElement.innerHTML = `
+                <img src="https://placehold.co/80x120" alt="Foto de ${match.name}">
+                <div class="info">
+                    <div class="name">${match.match_id}</div>
+                    <div class="status">Empieza la conversación!</div>
+                </div>
+                <div class="badge">LE GUSTAS</div>
+            `;
+        }
+
+        // Agregar el evento de click para abrir el chat
+        messageElement.addEventListener("click", () => abrirChat(match.match_id));
+        messagesContainer.appendChild(messageElement);
     }
 }
 
