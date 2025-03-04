@@ -119,14 +119,52 @@
         });
 
         // Cargar usuario del chat dinámicamente
-        function loadChatUser() {
+        async function loadChatUser() {
             const urlParams = new URLSearchParams(window.location.search);
-            const chatName = urlParams.get("matchId") || "Chat with Match";
-            const profilePic = urlParams.get("img") || "https://placehold.co/80x120";
+            const matchId = urlParams.get("matchId");
 
-            document.getElementById("chatUserName").textContent = chatUserName;
-            document.getElementById("profilePic").src = profilePic;
+            if (!matchId) {
+                console.error("No se encontró matchId en la URL");
+                return;
+            }
+
+            const currentUser = await obtenerUsuarioLogeado();
+            if (!currentUser) return;
+
+            try {
+                const response = await fetch(`http://20.90.161.106:3000/matches/${matchId}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    }
+                });
+
+                if (!response.ok) throw new Error("Error al obtener la información del match");
+
+                const matchData = await response.json();
+
+                const otherUserId = (matchData.user_id_1 === currentUser) ? matchData.user_id_2 : matchData.user_id_1;
+
+                const profileResponse = await fetch(`http://20.90.161.106:3000/profiles/${otherUserId}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+                if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+
+                const profileData = await profileResponse.json();
+                
+                // Actualizar la interfaz con el nombre y la foto del usuario
+                document.getElementById("chatUserName").textContent = profileData.username; // Nombre del usuario
+                document.getElementById("profilePic").src = profileData.profile_photo || "https://placehold.co/80x120"; // Foto de perfil
+
+            } catch (error) {
+                console.error("Error en loadChatUser:", error);
+            }
         }
+
 
         document.addEventListener("DOMContentLoaded", () => {
             connectChat();
