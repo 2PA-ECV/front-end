@@ -96,23 +96,6 @@ async function saveProfile() {
         console.warn("Campos inválidos:", { bio, interests, min_age_preference, max_age_preference, preferred_city, altura });
         return;
     }
-
-    // Subir imagen si existe
-    if (profile_image) {
-        const formData = new FormData();
-        formData.append('photo', profile_image);
-        try {
-            const response = await fetch('http://20.90.161.106:3000/photos', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: formData
-            });
-        } catch (error) {
-            console.error('Error al subir la imagen:', error);
-        }
-    }
     
 
     // Crear objeto de usuario
@@ -154,6 +137,24 @@ async function saveProfile() {
         console.error("Error guardando el perfil:", error);
         alert("Hubo un error al guardar el perfil.");
     }
+
+    // Subir imagen si existe
+    if (profile_image) {
+        const formData = new FormData();
+        formData.append('photo', profile_image);
+        try {
+            const response = await fetch('http://20.90.161.106:3000/photos/profilephoto', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: formData
+            });
+        } catch (error) {
+            console.error('Error al subir la imagen:', error);
+        }
+    }
+    
 }
 
 
