@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", loadProfile);
+let currentProfilePicture = ''; // Almacenará la URL de la imagen actual
 
 async function loadProfile() {
     const token = localStorage.getItem("token");
@@ -41,6 +42,7 @@ async function loadProfile() {
 
         // Si hay imagen de perfil guardada, mostrarla
         if (data.profile_picture) {
+            currentProfilePicture = data.profile_picture;
             // Verifica si la imagen ya es una URL completa
             if (data.profile_picture.startsWith('http')) {
                 document.getElementById("image-preview-img").src = data.profile_picture;
@@ -108,7 +110,7 @@ async function saveProfile() {
         altura,
         lifestyle: getTags('lifestyle-tags'),
         preferences,
-        profile_picture: null
+        profile_picture: profile_image ? null : currentProfilePicture
     };
 
     console.log("Datos a enviar:", userProfile);
@@ -150,6 +152,9 @@ async function saveProfile() {
                 },
                 body: formData
             });
+            if (response.ok) {
+                currentProfilePicture = await response.json().then(data => data.url); // Actualizar la URL
+            }
         } catch (error) {
             console.error('Error al subir la imagen:', error);
         }

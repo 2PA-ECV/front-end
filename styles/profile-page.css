@@ -251,6 +251,8 @@ body {
 .hashtag-container, .search-container {
     margin-top: 20px;
     text-align: center;
+    align-items: center;
+
 }
 
 .hashtag {
@@ -345,14 +347,16 @@ ul li button.decline:hover {
     gap: 10px;
   }
   
-  .whatsapp-btn {
+.whatsapp-btn {
     color: #25D366;
     cursor: pointer;
     font-size: 24px;
     transition: transform 0.3s;
-  }
+    align-items: center;
+
+}
   
-  .whatsapp-btn:hover {
+.whatsapp-btn:hover {
     transform: scale(1.1);
-  }
+}
   

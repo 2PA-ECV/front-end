@@ -24,10 +24,16 @@ body {
     z-index: 10; 
 }
 
+
+
 .header .text {
+    flex: 1;
+    text-align: center;
+    margin: 0 10px;
     font-size: 24px;
     font-weight: bold;
 }
+
 
 .header .ok-button {
     background-image: linear-gradient(to right, #ff5858, #f857a6);
@@ -183,7 +189,7 @@ input, select, textarea {
 }
 
 .tag {
-    background-color: #e0e0e0;
+    background-color: #781616;
     padding: 5px 10px;
     border-radius: 15px;
     display: flex;
@@ -194,7 +200,7 @@ input, select, textarea {
 .tag button {
     border: none;
     background: none;
-    color: #666;
+    color: #ffcdcd;
     cursor: pointer;
     padding: 0;
 }
@@ -205,3 +211,23 @@ input, select, textarea {
     flex-grow: 1;
     padding: 5px;
 }
+
+/* Estilos para el botón de regreso */
+.return-button {
+    background-image: linear-gradient(to left, #ff5858, #f857a6);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+
+.return-button:hover {
+    transform: scale(1.1);
+}
+
+
