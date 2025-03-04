@@ -145,7 +145,7 @@
 
                 const otherUserId = (matchData.user_id_1 === currentUser) ? matchData.user_id_2 : matchData.user_id_1;
 
-                const profileResponse = await fetch(`http://20.90.161.106:3000/profiles/${otherUserId}`, {
+                const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${otherUserId}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -158,8 +158,24 @@
                 
                 // Actualizar la interfaz con el nombre y la foto del usuario
                 document.getElementById("chatUserName").textContent = profileData.username; // Nombre del usuario
-                document.getElementById("profilePic").src = profileData.profile_photo || "https://placehold.co/80x120"; // Foto de perfil
-
+                if (profileData.profile_picture) {
+                    // Verifica si la imagen ya es una URL completa
+                    if (profileData.profile_picture.startsWith('http')) {
+                        document.getElementById("image-preview-img").src = data.profile_picture;
+                    } else {
+                        // Si no, obtén la imagen desde el servidor
+                        const fetchResponse = await fetch(`http://20.90.161.106:3000${data.profile_picture}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
+                        const imageBlob = await fetchResponse.blob();
+                        document.getElementById("profilePic").src = URL.createObjectURL(imageBlob);
+                    }
+                } else {
+                    document.getElementById("profilePic").src = "https://placehold.co/80x120";
+                }
             } catch (error) {
                 console.error("Error en loadChatUser:", error);
             }
