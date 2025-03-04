@@ -338,3 +338,21 @@ ul li button.accept:hover {
 ul li button.decline:hover {
     background: #ff3f3f;
 }
+
+.hashtag-container-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .whatsapp-btn {
+    color: #25D366;
+    cursor: pointer;
+    font-size: 24px;
+    transition: transform 0.3s;
+  }
+  
+  .whatsapp-btn:hover {
+    transform: scale(1.1);
+  }
+  

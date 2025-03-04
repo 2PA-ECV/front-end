@@ -13,8 +13,9 @@
         <span></span>
         <div class="text">Editar Perfil</div>
         <a href="profile-page.html" style="text-decoration: none;">
-            <div class="ok-button" onclick="saveProfile()">OK</div>
+            <div class="ok-button">RETURN</div>
         </a>
+        <div class="ok-button" onclick="saveProfile()">OK</div>
     </div>
 
     <div class="form-container">
@@ -39,8 +40,11 @@
                 <input type="text" id="city" placeholder="Dónde vives">
             </div>
             <div class="form-group">
-                <label for="interests">Intereses</label>
-                <input type="text" id="interests" placeholder="Tus intereses">
+                <label for="interests-input">Intereses</label>
+                <div class="tags-input-container">
+                    <div class="tags" id="interests-tags"></div>
+                    <input type="text" id="interests-input" placeholder="Escribe y presiona Enter">
+                </div>
             </div>
             <div class="form-group">
                 <label for="preferences">Preferencias sexuales</label>
@@ -53,8 +57,11 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="lifestyle">Estilo de vida</label>
-                <input type="text" id="lifestyle" placeholder="Ej: saludable, fiestero, etc.">
+                <label for="lifestyle-input">Estilo de vida</label>
+                <div class="tags-input-container">
+                    <div class="tags" id="lifestyle-tags"></div>
+                    <input type="text" id="lifestyle-input" placeholder="Ej: saludable, fiestero...">
+                </div>
             </div>
             <div class="form-group">
                 <label>Preferencias de edad</label>
@@ -97,6 +104,34 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        // Funciones generales para manejar tags
+        function addTag(containerId, text) {
+            const container = document.getElementById(containerId);
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                <span>${text}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
+            `;
+            container.appendChild(tag);
+        }
+
+        function setupTagInput(inputId, tagsId) {
+            const input = document.getElementById(inputId);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && input.value.trim()) {
+                    e.preventDefault();
+                    addTag(tagsId, input.value.trim());
+                    input.value = '';
+                }
+            });
+        }
+
+        // Configura los inputs de tags
+        setupTagInput('interests-input', 'interests-tags');
+        setupTagInput('lifestyle-input', 'lifestyle-tags');// Funciones generales para manejar tags
+        
     </script>
     <script src="scripts/edit-profile.js"></script>
 </body>

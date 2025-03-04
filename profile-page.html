@@ -62,7 +62,10 @@
       <div id="addFriendsSection" class="section active">
         <div class="hashtag-container">
           <p>Tu hashtag:</p>
-          <div class="hashtag" id="userHashtag" onclick="copyHashtag()">#LucasAndreu20</div>
+          <div class="hashtag-container-inner">
+            <div class="hashtag" id="userHashtag" onclick="copyHashtag()">#Cargando...</div>
+            <i class="fab fa-whatsapp whatsapp-btn" onclick="shareViaWhatsApp()"></i>
+          </div>
           <p id="copyMessage" style="display: none; color: #36D1DC;">¡Copiado!</p>
         </div>
 
@@ -153,13 +156,6 @@
       window.location.href = 'edit-profile.html';
     });
 
-    function copyHashtag() {
-      const hashtag = userHashtag.innerText;
-      navigator.clipboard.writeText(hashtag).then(() => {
-        copyMessage.style.display = "block";
-        setTimeout(() => copyMessage.style.display = "none", 2000);
-      });
-    }
 
     function showSection(section) {
       document.querySelectorAll('.section').forEach(sec => {
@@ -184,6 +180,7 @@
   </script>
   
   <script src="scripts/profile-page.js"></script>
+  <script src="scripts/friends.js"></script>
 
 </body>
 </html>
