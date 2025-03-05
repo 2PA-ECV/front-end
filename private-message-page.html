@@ -148,7 +148,8 @@
                 const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${otherUserId}`, {
                     method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
                     }
                 });
 
@@ -161,12 +162,12 @@
                 if (profileData.profile_picture) {
                     // Verifica si la imagen ya es una URL completa
                     if (profileData.profile_picture.startsWith('http')) {
-                        document.getElementById("image-preview-img").src = data.profile_picture;
+                        document.getElementById("image-preview-img").src = profileData.profile_picture;
                     } else {
                         // Si no, obtén la imagen desde el servidor
-                        const fetchResponse = await fetch(`http://20.90.161.106:3000${data.profile_picture}`, {
+                        const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
                             headers: {
-                                'Authorization': `Bearer ${token}`
+                                'Authorization': `Bearer ${localStorage.getItem("token")}`
                             }
                         });
                         if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
