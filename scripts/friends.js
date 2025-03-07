@@ -1,3 +1,28 @@
+async function obtenerUsuarioLogeado() {
+  const token = localStorage.getItem("token"); // Obtener el token desde localStorage
+  if (!token) {
+      console.error("No se encontró el token");
+      return;
+  }
+
+  const userResponse = await fetch('http://20.90.161.106:3000/user/', {
+      method: 'GET',
+      headers: {
+          "Authorization": `Bearer ${token}`,
+      }
+  });
+
+  if (!userResponse.ok) {
+      console.error("Error al obtener los datos del usuario");
+      return;
+  }
+
+  const userData = await userResponse.json();
+  const currentUser = userData.user_id;  // Almacenar el user_id del usuario actual
+  console.log("Usuario logueado:", currentUser);
+  return currentUser;
+}
+
 function copyHashtag() {
   const hashtag = document.getElementById("userHashtag").textContent;
   
@@ -97,26 +122,30 @@ async function loadPendingRequests() {
   }
 }
 
-function renderPendingRequests(requests) {
+async function renderPendingRequests(requests) {
   const pendingRequestsList = document.getElementById("pendingRequestsList");
   pendingRequestsList.innerHTML = ''; // Limpiar lista actual
 
+  currentUserId = await obtenerUsuarioLogeado();
+
   requests.forEach(request => {
-    const requestItem = document.createElement("li");
-    requestItem.classList.add("request");
-    
-    requestItem.innerHTML = `
-      <div class="request-info">
-        <div class="request-name">${request.name}</div>
-        <div class="request-hashtag">${request.hashtag}</div>
-      </div>
-      <div class="request-actions">
-        <button class="accept" onclick="acceptFriendRequest(${request.id})">Aceptar</button>
-        <button class="reject" onclick="rejectFriendRequest(${request.id})">Rechazar</button>
-      </div>
-    `;
-    
-    pendingRequestsList.appendChild(requestItem);
+    if (request.user_id_2 == currentUserId) {
+      const requestItem = document.createElement("li");
+      requestItem.classList.add("request");
+      // Solicitud recibida por el usuario actual
+      requestItem.innerHTML = `
+        <div class="request-info">
+          <div class="request-name">${request.name}</div>
+          <div class="request-hashtag">${request.hashtag}</div>
+        </div>
+        <div class="request-actions">
+          <button class="accept" onclick="acceptFriendRequest(${request.user_id_1})">Aceptar</button>
+          <button class="reject" onclick="rejectFriendRequest(${request.user_id_1})">Rechazar</button>
+        </div>
+      `;
+
+      pendingRequestsList.appendChild(requestItem);
+    }
   });
 }
 
@@ -144,6 +173,27 @@ async function acceptFriendRequest(requestId) {
   }
 }
 
+async function sendFriendRequest(friendId) {
+  try {
+      const response = await fetch("http://20.90.161.106:3000/friends/send-request", {
+          method: "POST",
+          headers: {
+              "Authorization": `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ targetUserId: friendId }) 
+      });
+
+      if (!response.ok) {
+          throw new Error(`Error al enviar solicitud: ${response.status} ${response.statusText}`);
+      }
+      console.log("Solicitud enviada");
+      alert("Solicitud enviada");
+  } catch (error) {
+      console.error("Error en sendFriendRequest:", error);
+  }
+} 
+
 async function rejectFriendRequest(requestId) {
   try {
       const response = await fetch('http://20.90.161.106:3000/friends/reject-request', {
@@ -166,7 +216,7 @@ async function rejectFriendRequest(requestId) {
   }
 }
 
-rasync function searchFriend() {
+async function searchFriend() {
   try {
       const userTag = document.getElementById("searchHashtag").value.trim();
       if (!userTag) {
@@ -188,6 +238,7 @@ rasync function searchFriend() {
 
       const friendData = await response.json();
       console.log("Amigo encontrado:", friendData);
+      sendFriendRequest(friendData.user_id);
 
   } catch (error) {
       console.error("Error en searchFriend:", error);
@@ -269,4 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchUserTag();
   loadPendingRequests();
   getFriends();
+
+  setInterval(loadPendingRequests, 10000);
+  setInterval(getFriends, 10000);              
 });
+
