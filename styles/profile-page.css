@@ -252,7 +252,6 @@ body {
     margin-top: 20px;
     text-align: center;
     align-items: center;
-
 }
 
 .hashtag {
@@ -344,6 +343,7 @@ ul li button.decline:hover {
 .hashtag-container-inner {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
   }
   
