@@ -336,7 +336,8 @@ async function handleSwipe(isLike, actualCard) {
           console.log('Respuesta de match:', matchData);
 
           if (matchData.message === 'Match creado') {
-              alert('¡Tienes un nuevo match!');
+              animateMatch();
+              //alert('¡Tienes un nuevo match!');
           }
 
       } catch (error) {
