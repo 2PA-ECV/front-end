@@ -157,7 +157,7 @@ async function acceptFriendRequest(requestId) {
               'Authorization': `Bearer ${localStorage.getItem("token")}`,
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ requestId })
+          body: JSON.stringify({ targetUserId: requestId })
       });
 
       if (!response.ok) {
@@ -202,7 +202,7 @@ async function rejectFriendRequest(requestId) {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          body: JSON.stringify({ requestId })
+          body: JSON.stringify({ targetUserId: requestId })
       });
 
       if (!response.ok) {
@@ -292,13 +292,13 @@ function renderFriendsList(friends) {
 
 async function removeFriend(friendId) {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/delete-friends', {
+      const response = await fetch('http://20.90.161.106:3000/friends/delete-friend', {
           method: 'POST',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`,
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ friendId })
+          body: JSON.stringify({ targetUserId: friendId })
       });
 
       if (!response.ok) {
