@@ -23,30 +23,68 @@ async function obtenerUsuarioLogeado() {
   return currentUser;
 }
 
+async function getUserDetails(userId) {
+  try {
+    // Hacer la solicitud al endpoint /user/:id
+    const response = await fetch(`http://20.90.161.106:3000/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    // Verificar si la respuesta es exitosa
+    if (!response.ok) {
+      throw new Error(`Error al obtener detalles del usuario: ${response.status} ${response.statusText}`);
+    }
+
+    const userData = await response.json();
+    return userData; // Devuelve los datos del usuario
+  } catch (error) {
+    console.error("Error en getUserDetails:", error);
+    return null; // Devuelve null en caso de error
+  }
+}
+
 function copyHashtag() {
   const hashtag = document.getElementById("userHashtag").textContent;
-  
-  navigator.clipboard.writeText(hashtag).then(() => {
-    showCopyFeedback();
-  }).catch(err => {
-    console.error('Error al copiar:', err);
-    fallbackCopy(hashtag);
-  });
+
+  // Verificar si el contexto es seguro (https o localhost)
+  const isSecureContext = window.isSecureContext; // true si es https o localhost
+
+  if (isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+    // Usar Clipboard API si está disponible y el contexto es seguro
+    navigator.clipboard.writeText(hashtag).then(() => {
+      showCopyFeedback();
+    }).catch(err => {
+      console.error('Error al copiar usando Clipboard API:', err);
+      fallbackCopy(hashtag); // Usar el método de respaldo si falla
+    });
+  } else {
+    console.warn('Clipboard API no disponible o contexto no seguro, usando método de respaldo.');
+    fallbackCopy(hashtag); // Usar el método de respaldo si no es seguro o no está disponible
+  }
 }
 
 function fallbackCopy(text) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
+  textArea.style.position = "fixed";  // Evita que se desplace la página
   document.body.appendChild(textArea);
+  textArea.focus();
   textArea.select();
-  
+
   try {
-    document.execCommand('copy');
-    showCopyFeedback();
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showCopyFeedback();
+    } else {
+      alert('Error al copiar, por favor copia manualmente');
+    }
   } catch (err) {
     alert('Error al copiar, por favor copia manualmente');
   }
-  
+
   document.body.removeChild(textArea);
 }
 
@@ -57,6 +95,7 @@ function showCopyFeedback() {
     copyMessage.style.display = "none";
   }, 2000);
 }
+
 
 function shareViaWhatsApp() {
   const hashtag = document.getElementById("userHashtag").textContent;
@@ -128,15 +167,16 @@ async function renderPendingRequests(requests) {
 
   currentUserId = await obtenerUsuarioLogeado();
 
-  requests.forEach(request => {
+  for (const request of requests) {
     if (request.user_id_2 == currentUserId) {
+      const userDetails = await getUserDetails(request.user_id_1);
       const requestItem = document.createElement("li");
       requestItem.classList.add("request");
       // Solicitud recibida por el usuario actual
       requestItem.innerHTML = `
         <div class="request-info">
-          <div class="request-name">${request.name}</div>
-          <div class="request-hashtag">${request.hashtag}</div>
+          <div class="request-name">${userDetails.username}</div>
+          <div class="request-hashtag">${userDetails.user_tag}</div>
         </div>
         <div class="request-actions">
           <button class="accept" onclick="acceptFriendRequest(${request.user_id_1})">Aceptar</button>
@@ -146,9 +186,8 @@ async function renderPendingRequests(requests) {
 
       pendingRequestsList.appendChild(requestItem);
     }
-  });
+  }
 }
-
 async function acceptFriendRequest(requestId) {
   try {
       const response = await fetch('http://20.90.161.106:3000/friends/accept-request', {
@@ -268,26 +307,37 @@ async function getFriends() {
   }
 }
 
-function renderFriendsList(friends) {
+async function renderFriendsList(friends) {
   const friendsListContainer = document.getElementById("friendsList");
-  friendsListContainer.innerHTML = ''; // Limpiar la lista antes de renderizar
+  friendsListContainer.innerHTML = ''; 
 
-  friends.forEach(friend => {
+  // Obtener el user_id del usuario actual
+  const currentUserId = await obtenerUsuarioLogeado();
+
+  for (const friend of friends) {
+    const friendId = friend.user_id_1 === currentUserId ? friend.user_id_2 : friend.user_id_1;
+
+    const friendDetails = await getUserDetails(friendId);
+
+    if (friendDetails) {
       const friendItem = document.createElement("li");
       friendItem.classList.add("friend");
 
       friendItem.innerHTML = `
-          <div class="friend-info">
-              <div class="friend-name">${friend.name}</div>
-              <div class="friend-hashtag">${friend.hashtag}</div>
-          </div>
-          <div class="friend-actions">
-              <button class="remove" onclick="removeFriend(${friend.id})">Eliminar amigo</button>
-          </div>
+        <div class="friend-info">
+          <div class="friend-name">${friendDetails.username}</div>
+          <div class="friend-hashtag">${friendDetails.user_tag}</div>
+        </div>
+        <div class="friend-actions">
+          <button class="remove" onclick="removeFriend(${friendId})">Eliminar amigo</button>
+        </div>
       `;
 
       friendsListContainer.appendChild(friendItem);
-  });
+    } else {
+      console.error("No se pudieron obtener los detalles del amigo:", friendId);
+    }
+  }
 }
 
 async function removeFriend(friendId) {
@@ -316,12 +366,35 @@ async function removeFriend(friendId) {
 }
 
 // Llamar a la función cuando la página cargue
+// Llamar a la función cuando la página cargue
 document.addEventListener('DOMContentLoaded', () => {
-  fetchUserTag();
-  loadPendingRequests();
-  getFriends();
-
-  setInterval(loadPendingRequests, 10000);
-  setInterval(getFriends, 10000);              
+  fetchUserTag(); // Cargar el hashtag del usuario al inicio
 });
+
+// Función para mostrar una sección y cargar los datos correspondientes
+function showSection(section) {
+  document.querySelectorAll('.section').forEach(sec => {
+    sec.style.display = 'none';
+    sec.classList.remove('active');
+  });
+
+  // Mostrar la sección activa
+  const activeSection = document.getElementById(`${section}Section`);
+  if (activeSection) {
+    activeSection.style.display = 'block';
+    activeSection.classList.add('active');
+  }
+
+  if (section === 'pendingRequests') {
+    loadPendingRequests(); // Cargar solicitudes pendientes
+  } else if (section === 'friendsList') {
+    getFriends(); // Cargar la lista de amigos
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(tab => tab.classList.remove('active'));
+  const activeTab = document.querySelector(`button[onclick="showSection('${section}')"]`);
+  if (activeTab) {
+    activeTab.classList.add('active');
+  }
+}
 
