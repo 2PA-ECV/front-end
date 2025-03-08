@@ -53,43 +53,44 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
         if(match.user_id_1 == currentUser){
             // Obtener las fotos del usuario
             try {
-                const response = await fetch(`http://20.90.161.106:3000/photos/${match.user_id_2}`, {
-                    method: 'GET',
+                const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${match.user_id_2}`, {
+                    method: "GET",
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
                     }
                 });
 
-                if (!response.ok) throw new Error('Error al obtener las fotos');
+                if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+                const profileData = await profileResponse.json();
+                
+                let profilePicture = 'https://placehold.co/80x120';
 
-                const photos = await response.json();
-                console.log('Fotos obtenidas:', photos);
-
-                const images = await Promise.all(photos.length > 0 ? photos.map(async (photo) => {
-                    if (photo.photo_url.startsWith('http')) {
-                        return photo.photo_url;
-                    }
-                    const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`
+                if (profileData.profile_picture) {
+                    if (profileData.profile_picture.startsWith('http')) {
+                        profilePicture = profileData.profile_picture;
+                    } else {
+                        const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem("token")}`
+                            }
+                        });
+        
+                        if (fetchResponse.ok) {
+                            profilePicture = URL.createObjectURL(await fetchResponse.blob());
                         }
-                    });
-                    if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
-                    return URL.createObjectURL(await fetchResponse.blob());
-                }) : ['images/default.png']);
-
-                // Usar la primera imagen como foto de perfil
-                const profilePicture = images.length > 0 ? images[0] : 'https://placehold.co/80x120';
+                    }
+                }
 
                 matchElement.innerHTML = `
-                    <img src="${profilePicture}" alt="Foto de ${match.name}">
-                    <div>${match.match_id}</div>
+                    <img src="${profilePicture}" alt="Foto de ${profileData.username}">
+                    <div>${profileData.username}</div>
                 `;
             } catch (error) {
                 console.error('Error al obtener las fotos:', error);
                 matchElement.innerHTML = `
-                    <img src="https://placehold.co/80x120" alt="Foto de ${match.name}">
-                    <div>${match.match_id}</div>
+                    <img src="https://placehold.co/80x120" alt="Foto de usuario desconocido">
+                    <div>Usuario desconocido</div>
                 `;
             }
             console.log("Match id:", match.match_id);
@@ -97,37 +98,38 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
             container.appendChild(matchElement);
         } else{
             try {
-                const response = await fetch(`http://20.90.161.106:3000/photos/${match.user_id_1}`, {
-                    method: 'GET',
+                const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${match.user_id_1}`, {
+                    method: "GET",
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
                     }
                 });
 
-                if (!response.ok) throw new Error('Error al obtener las fotos');
+                if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+                const profileData = await profileResponse.json();
+                
+                let profilePicture = 'https://placehold.co/80x120';
 
-                const photos = await response.json();
-                console.log('Fotos obtenidas:', photos);
-
-                const images = await Promise.all(photos.length > 0 ? photos.map(async (photo) => {
-                    if (photo.photo_url.startsWith('http')) {
-                        return photo.photo_url;
-                    }
-                    const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`
+                if (profileData.profile_picture) {
+                    if (profileData.profile_picture.startsWith('http')) {
+                        profilePicture = profileData.profile_picture;
+                    } else {
+                        const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem("token")}`
+                            }
+                        });
+        
+                        if (fetchResponse.ok) {
+                            profilePicture = URL.createObjectURL(await fetchResponse.blob());
                         }
-                    });
-                    if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
-                    return URL.createObjectURL(await fetchResponse.blob());
-                }) : ['images/default.png']);
-
-                // Usar la primera imagen como foto de perfil
-                const profilePicture = images.length > 0 ? images[0] : 'https://placehold.co/80x120';
+                    }
+                }
 
                 matchElement.innerHTML = `
-                    <img src="${profilePicture}" alt="Foto de ${match.name}">
-                    <div>${match.match_id}</div>
+                    <img src="${profilePicture}" alt="Foto de ${profileData.username}">
+                    <div>${profileData.username}</div>
                 `;
             } catch (error) {
                 console.error('Error al obtener las fotos:', error);
