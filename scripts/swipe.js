@@ -150,7 +150,8 @@ function renderUser(user) {
       <img src="" class="profile-image">
       <div class="profile-details">
           <h1>${user.name} <span class="age">${user.age}</span></h1>
-          <p class="bio"><i class="fas fa-search"></i> ${user.bio}</p>
+          <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+          <p class="bio"></i> ${user.bio}</p>
       </div>
       <div class="choice nope">NOPE</div>
       <div class="choice like">LIKE</div>

@@ -27,7 +27,7 @@ async function obtenerUsuarioLogeado() {
 
 async function loadMessages(matchId) {
     try {
-        const response = await fetch(`http://20.90.161.106:3000/messages/${matchId}`, {
+        const response = await fetch(`http://20.90.161.106:3000/chat/${matchId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
