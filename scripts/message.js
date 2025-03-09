@@ -145,6 +145,8 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
     }
 }
 
+
+// esta dupliacada?
 async function mostrarMatchesMessageEnHTML(matches, currentUser) {
     const messagesContainer = document.querySelector(".messages"); // Seleccionar el contenedor de mensajes
     messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
