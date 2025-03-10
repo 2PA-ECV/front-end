@@ -86,7 +86,7 @@ async function saveProfile() {
     const preferred_city = document.getElementById("city").value.trim();
     const altura = parseInt(document.getElementById("height").value);
     const preferences = document.getElementById("preferences").value;
-
+    console.log("Valores obtenidos:", { bio, min_age_preference, max_age_preference, preferred_city, altura, preferences });
 
     // Manejar imagen de perfil (puede ser un archivo o una URL)
     const profile_image = document.getElementById("profile-image").files[0];

@@ -175,6 +175,4 @@ function animateMatch() {
     }
 
     animate();
-}
-
-animateMatch();
+};
