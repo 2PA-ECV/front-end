@@ -1,5 +1,6 @@
 Ip para acceder a la web:
 (http://20.117.185.81/)
+https://shorturl.at/PiRof
 
 # Manual de Usuario
 
