@@ -135,7 +135,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
                 console.error('Error al obtener las fotos:', error);
                 matchElement.innerHTML = `
                     <img src="https://placehold.co/80x120" alt="Foto de ${match.name}">
-                    <div>${match.match_id}</div>
+                    <div>${profileData.username}</div>
                 `;
             }
             console.log("Match id:", match.match_id);
@@ -146,7 +146,6 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
 }
 
 
-// esta dupliacada?
 async function mostrarMatchesMessageEnHTML(matches, currentUser) {
     const messagesContainer = document.querySelector(".messages"); // Seleccionar el contenedor de mensajes
     messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
@@ -172,6 +171,17 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
             const photos = await response.json();
             console.log('Fotos obtenidas:', photos);
 
+            const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+            const profileData = await profileResponse.json();
+
             const images = await Promise.all(photos.length > 0 ? photos.map(async (photo) => {
                 if (photo.photo_url.startsWith('http')) {
                     return photo.photo_url;
@@ -189,9 +199,9 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
 
             // Mantener la estructura de tu mensaje
             messageElement.innerHTML = `
-                <img src="${profilePicture}" alt="Foto de ${match.match_id}">
+                <img src="${profilePicture}" alt="Foto de ${profileData.username}">
                 <div class="info">
-                    <div class="name">${match.match_id}</div>
+                    <div class="name">${profileData.username}</div>
                     <div class="status">Empieza la conversación!</div>
                 </div>
                 <div class="badge">LE GUSTAS</div>
@@ -202,9 +212,9 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
         } catch (error) {
             console.error('Error al obtener las fotos:', error);
             messageElement.innerHTML = `
-                <img src="https://placehold.co/80x120" alt="Foto de ${match.name}">
+                <img src="https://placehold.co/80x120" alt="Foto de ${profileData.username}">
                 <div class="info">
-                    <div class="name">${match.match_id}</div>
+                    <div class="name">${profileData.username}</div>
                     <div class="status">Empieza la conversación!</div>
                 </div>
                 <div class="badge">LE GUSTAS</div>
