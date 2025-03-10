@@ -119,7 +119,7 @@ document.addEventListener('touchstart', startDrag, { passive: true })
 
 async function loadNextUser() {
   try {
-      const response = await fetch('http://20.90.161.106:3000/user/next-user', {
+      const response = await fetch('http://20.117.185.81:3000/user/next-user', {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -175,7 +175,7 @@ function renderUser(user) {
 
 async function loadUserPhotos(userId, article) {
   try {
-      const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
+      const response = await fetch(`http://20.117.185.81:3000/photos/${userId}`, {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -191,7 +191,7 @@ async function loadUserPhotos(userId, article) {
         if (photo.photo_url.startsWith('http')) {
           return photo.photo_url;
         }  
-        const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
+        const fetchResponse = await fetch(`http://20.117.185.81:3000${photo.photo_url}`, {
               headers: {
                   'Authorization': `Bearer ${localStorage.getItem("token")}`
               }
@@ -302,7 +302,7 @@ async function handleSwipe(isLike, actualCard) {
   if (isLike) {
       try {
           // Enviar el like al servidor
-          const likeResponse = await fetch('http://20.90.161.106:3000/likes', {
+          const likeResponse = await fetch('http://20.117.185.81:3000/likes', {
               method: 'POST',
               headers: {
                   'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -320,7 +320,7 @@ async function handleSwipe(isLike, actualCard) {
           console.log('Like enviado:', likeData);
 
           // Verificar si hay un match
-          const matchResponse = await fetch('http://20.90.161.106:3000/matches/check', {
+          const matchResponse = await fetch('http://20.117.185.81:3000/matches/check', {
               method: 'POST',
               headers: {
                   'Authorization': `Bearer ${localStorage.getItem("token")}`,

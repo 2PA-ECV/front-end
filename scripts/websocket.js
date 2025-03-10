@@ -1,4 +1,4 @@
-const socket = io("ws://20.90.161.106:4000");
+const socket = io("ws://20.117.185.81:4000");
 
 function conectarChat() {
     const urlParams = new URLSearchParams(window.location.search);

@@ -6,7 +6,7 @@ async function obtenerMatches() {
     }
 
     // Obtener los matches
-    const response = await fetch("http://20.90.161.106:3000/matches", {
+    const response = await fetch("http://20.117.185.81:3000/matches", {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -23,7 +23,7 @@ async function obtenerMatches() {
     console.log("Matches obtenidos:", data);
     
     // Obtener el usuario actual
-    const userResponse = await fetch('http://20.90.161.106:3000/user/', {
+    const userResponse = await fetch('http://20.117.185.81:3000/user/', {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -53,7 +53,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
         if(match.user_id_1 == currentUser){
             // Obtener las fotos del usuario
             try {
-                const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${match.user_id_2}`, {
+                const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${match.user_id_2}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -70,7 +70,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
                     if (profileData.profile_picture.startsWith('http')) {
                         profilePicture = profileData.profile_picture;
                     } else {
-                        const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
+                        const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem("token")}`
                             }
@@ -98,7 +98,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
             container.appendChild(matchElement);
         } else{
             try {
-                const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${match.user_id_1}`, {
+                const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${match.user_id_1}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -115,7 +115,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
                     if (profileData.profile_picture.startsWith('http')) {
                         profilePicture = profileData.profile_picture;
                     } else {
-                        const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
+                        const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem("token")}`
                             }
@@ -160,7 +160,7 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
         const userId = (match.user_id_1 === currentUser) ? match.user_id_2 : match.user_id_1;
         
         try {
-            const response = await fetch(`http://20.90.161.106:3000/photos/${userId}`, {
+            const response = await fetch(`http://20.117.185.81:3000/photos/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -176,7 +176,7 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
                 if (photo.photo_url.startsWith('http')) {
                     return photo.photo_url;
                 }
-                const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
+                const fetchResponse = await fetch(`http://20.117.185.81:3000${photo.photo_url}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("token")}`
                     }

@@ -1,4 +1,4 @@
-const socket = io("ws://20.90.161.106:4000");
+const socket = io("ws://20.117.185.81:4000");
 
 async function obtenerUsuarioLogeado() {
     const token = localStorage.getItem("token"); // Obtener el token desde localStorage
@@ -7,7 +7,7 @@ async function obtenerUsuarioLogeado() {
         return;
     }
 
-    const userResponse = await fetch('http://20.90.161.106:3000/user/', {
+    const userResponse = await fetch('http://20.117.185.81:3000/user/', {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -27,7 +27,7 @@ async function obtenerUsuarioLogeado() {
 
 async function loadMessages(matchId) {
     try {
-        const response = await fetch(`http://20.90.161.106:3000/chat/${matchId}`, {
+        const response = await fetch(`http://20.117.185.81:3000/chat/${matchId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -120,7 +120,7 @@ async function loadChatUser() {
     if (!currentUser) return;
 
     try {
-        const response = await fetch(`http://20.90.161.106:3000/matches/${matchId}`, {
+        const response = await fetch(`http://20.117.185.81:3000/matches/${matchId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -133,7 +133,7 @@ async function loadChatUser() {
 
         const otherUserId = (matchData.user_id_1 === currentUser) ? matchData.user_id_2 : matchData.user_id_1;
 
-        const profileResponse = await fetch(`http://20.90.161.106:3000/profile/${otherUserId}`, {
+        const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${otherUserId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -153,7 +153,7 @@ async function loadChatUser() {
                 document.getElementById("image-preview-img").src = profileData.profile_picture;
             } else {
                 // Si no, obtén la imagen desde el servidor
-                const fetchResponse = await fetch(`http://20.90.161.106:3000${profileData.profile_picture}`, {
+                const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("token")}`
                     }

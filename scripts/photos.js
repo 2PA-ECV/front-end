@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function loadUserPhotos() {
         try {
-            const response = await fetch(`http://20.90.161.106:3000/photos/`, {
+            const response = await fetch(`http://20.117.185.81:3000/photos/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                           if (photo.photo_url.startsWith('http')) {
                               return { url: photo.photo_url, id: photo.id };
                           }
-                          const fetchResponse = await fetch(`http://20.90.161.106:3000${photo.photo_url}`, {
+                          const fetchResponse = await fetch(`http://20.117.185.81:3000${photo.photo_url}`, {
                               headers: {
                                   'Authorization': `Bearer ${localStorage.getItem("token")}`
                               }
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log("Photo id:", photoId);
             if (!photoId) return;
             try {
-                const response = await fetch(`http://20.90.161.106:3000/photos/${photoId}`, {
+                const response = await fetch(`http://20.117.185.81:3000/photos/${photoId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
                 });
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             formData.append('photo', file);
 
             try {
-                const response = await fetch('http://20.90.161.106:3000/photos', {
+                const response = await fetch('http://20.117.185.81:3000/photos', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("token")}`

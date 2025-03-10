@@ -10,7 +10,7 @@ async function loadProfile() {
     }
 
     try {
-        const response = await fetch("http://20.90.161.106:3000/profile", {
+        const response = await fetch("http://20.117.185.81:3000/profile", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -48,7 +48,7 @@ async function loadProfile() {
                 document.getElementById("image-preview-img").src = data.profile_picture;
             } else {
                 // Si no, obtén la imagen desde el servidor
-                const fetchResponse = await fetch(`http://20.90.161.106:3000${data.profile_picture}`, {
+                const fetchResponse = await fetch(`http://20.117.185.81:3000${data.profile_picture}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -116,7 +116,7 @@ async function saveProfile() {
     console.log("Datos a enviar:", userProfile);
 
     try {
-        const response = await fetch("http://20.90.161.106:3000/profile", {
+        const response = await fetch("http://20.117.185.81:3000/profile", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -145,7 +145,7 @@ async function saveProfile() {
         const formData = new FormData();
         formData.append('photo', profile_image);
         try {
-            const response = await fetch('http://20.90.161.106:3000/photos/profilephoto', {
+            const response = await fetch('http://20.117.185.81:3000/photos/profilephoto', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`

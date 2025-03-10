@@ -5,7 +5,7 @@ async function obtenerUsuarioLogeado() {
       return;
   }
 
-  const userResponse = await fetch('http://20.90.161.106:3000/user/', {
+  const userResponse = await fetch('http://20.117.185.81:3000/user/', {
       method: 'GET',
       headers: {
           "Authorization": `Bearer ${token}`,
@@ -26,7 +26,7 @@ async function obtenerUsuarioLogeado() {
 async function getUserDetails(userId) {
   try {
     // Hacer la solicitud al endpoint /user/:id
-    const response = await fetch(`http://20.90.161.106:3000/user/${userId}`, {
+    const response = await fetch(`http://20.117.185.81:3000/user/${userId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -105,7 +105,7 @@ function shareViaWhatsApp() {
   window.open(whatsappUrl, '_blank');
 }
 
-const apiUrl = "http://20.90.161.106:3000/user/";
+const apiUrl = "http://20.117.185.81:3000/user/";
 const token = localStorage.getItem("token");
 
 async function fetchUserTag() {
@@ -141,7 +141,7 @@ async function fetchUserTag() {
 
 async function loadPendingRequests() {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/pending-requests', {
+      const response = await fetch('http://20.117.185.81:3000/friends/pending-requests', {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -190,7 +190,7 @@ async function renderPendingRequests(requests) {
 }
 async function acceptFriendRequest(requestId) {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/accept-request', {
+      const response = await fetch('http://20.117.185.81:3000/friends/accept-request', {
           method: 'POST',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -214,7 +214,7 @@ async function acceptFriendRequest(requestId) {
 
 async function sendFriendRequest(friendId) {
   try {
-      const response = await fetch("http://20.90.161.106:3000/friends/send-request", {
+      const response = await fetch("http://20.117.185.81:3000/friends/send-request", {
           method: "POST",
           headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -235,7 +235,7 @@ async function sendFriendRequest(friendId) {
 
 async function rejectFriendRequest(requestId) {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/reject-request', {
+      const response = await fetch('http://20.117.185.81:3000/friends/reject-request', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ async function searchFriend() {
       }
 
       const encodedTag = encodeURIComponent(userTag); // Codifica el hashtag para la URL
-      const response = await fetch(`http://20.90.161.106:3000/friends/search/${encodedTag}`, {
+      const response = await fetch(`http://20.117.185.81:3000/friends/search/${encodedTag}`, {
           method: "GET",
           headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -287,7 +287,7 @@ async function searchFriend() {
 
 async function getFriends() {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/', {
+      const response = await fetch('http://20.117.185.81:3000/friends/', {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -342,7 +342,7 @@ async function renderFriendsList(friends) {
 
 async function removeFriend(friendId) {
   try {
-      const response = await fetch('http://20.90.161.106:3000/friends/delete-friend', {
+      const response = await fetch('http://20.117.185.81:3000/friends/delete-friend', {
           method: 'POST',
           headers: {
               'Authorization': `Bearer ${localStorage.getItem("token")}`,

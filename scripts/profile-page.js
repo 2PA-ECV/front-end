@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchUserData(token) {
-    fetch('http://20.90.161.106:3000/user/', {
+    fetch('http://20.117.185.81:3000/user/', {
         method: 'GET',
         headers: {
             'Authorization': token
@@ -47,7 +47,7 @@ function calculateAge(birthDate) {
 
 async function fetchProfilePicture(token) {
     try {
-        const response = await fetch("http://20.90.161.106:3000/profile", {
+        const response = await fetch("http://20.117.185.81:3000/profile", {
             method: "GET",
             headers: { "Authorization": token }
         });
@@ -84,7 +84,7 @@ async function updateProfilePicture(profilePicturePath, token) {
         profileImage.src = profilePicturePath;
     } else if (profilePicturePath.startsWith('/')) {
         try {
-            const response = await fetch(`http://20.90.161.106:3000${profilePicturePath}`, {
+            const response = await fetch(`http://20.117.185.81:3000${profilePicturePath}`, {
                 headers: { 'Authorization': token }
             });
             if (!response.ok) throw new Error('Image fetch failed');
