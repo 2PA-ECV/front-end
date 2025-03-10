@@ -1,5 +1,6 @@
 const socket = io("ws://20.117.185.81:4000");
 
+
 async function obtenerUsuarioLogeado() {
     const token = localStorage.getItem("token"); // Obtener el token desde localStorage
     if (!token) {
@@ -25,25 +26,6 @@ async function obtenerUsuarioLogeado() {
     return currentUser;
 }
 
-async function loadMessages(matchId) {
-    try {
-        const response = await fetch(`http://20.117.185.81:3000/chat/${matchId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-        });
-
-        if (!response.ok) throw new Error("Error al cargar los mensajes");
-
-        const data = await response.json();
-        return data.messages;
-    } catch (error) {
-        console.error("Error al cargar mensajes:", error);
-        return [];
-    }
-}
-
 async function connectChat() {
     const currentUser = await obtenerUsuarioLogeado();
     const urlParams = new URLSearchParams(window.location.search);
@@ -52,12 +34,6 @@ async function connectChat() {
     if (matchId) {
         socket.emit("joinRoom", matchId);
         console.log(`Conectado a la sala ${matchId}`);
-
-        const messages = await loadMessages(matchId);
-    
-        messages.forEach(msg => {
-            addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received");
-        });
 
         // Evitar múltiples listeners eliminando el anterior
         socket.off("receiveMessage"); 
@@ -90,7 +66,6 @@ function sendMessage() {
 
             socket.emit("sendMessage", messageData);
             messageInput.value = "";
-            addMessageToChat(messageText, "sent");
         }
     });
 }
@@ -105,6 +80,14 @@ function addMessageToChat(message, type) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
+// Eventos de envío de mensaje
+document.getElementById("sendMessage").addEventListener("click", sendMessage);
+document.getElementById("messageInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+    }
+});
 
 // Cargar usuario del chat dinámicamente
 async function loadChatUser() {
@@ -165,21 +148,169 @@ async function loadChatUser() {
         } else {
             document.getElementById("profilePic").src = "https://placehold.co/80x120";
         }
+
+        const messagesData = await loadMessages(matchId);
+        console.log("Mensajes cargados:", messagesData);
+
+        messagesData.messages.forEach(msg => {
+            addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received");
+        });
+
+
     } catch (error) {
         console.error("Error en loadChatUser:", error);
     }
 }
 
-// Eventos de envío de mensaje
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("sendMessage").addEventListener("click", sendMessage);
-    document.getElementById("messageInput").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
 
+document.addEventListener("DOMContentLoaded", () => {
     connectChat();
     loadChatUser();
+    const smileyIcon = document.querySelector('.fa-smile');
+    // Función para mostrar/ocultar el selector de emojis
+    smileyIcon.addEventListener('click', function() {
+        const emojiPicker = document.getElementById('emojiPicker');
+        if (emojiPicker) {
+            emojiPicker.remove();
+        } else {
+            const emojiPickerDiv = document.createElement('div');
+            emojiPickerDiv.id = 'emojiPicker';
+            emojiPickerDiv.classList.add('emoji-picker');
+            emojiPickerDiv.innerHTML = `
+                <span>😀</span>
+                <span>😁</span>
+                <span>😂</span>
+                <span>🤣</span>
+                <span>😃</span>
+                <span>😄</span>
+                <span>😅</span>
+                <span>😆</span>
+                <span>😉</span>
+                <span>😊</span>
+                <span>😋</span>
+                <span>😎</span>
+                <span>😍</span>
+                <span>😘</span>
+                <span>😗</span>
+                <span>😙</span>
+                <span>😚</span>
+                <span>🙂</span>
+                <span>🤗</span>
+                <span>🤩</span>
+                <span>🤔</span>
+                <span>🤨</span>
+                <span>😐</span>
+                <span>😑</span>
+                <span>😶</span>
+                <span>🙄</span>
+                <span>😏</span>
+                <span>😣</span>
+                <span>😥</span>
+                <span>😮</span>
+                <span>🤐</span>
+                <span>😯</span>
+                <span>😪</span>
+                <span>😫</span>
+                <span>😴</span>
+                <span>😌</span>
+                <span>😛</span>
+                <span>😜</span>
+                <span>😝</span>
+                <span>🤤</span>
+                <span>😒</span>
+                <span>😓</span>
+                <span>😔</span>
+                <span>😕</span>
+                <span>🙃</span>
+                <span>🤑</span>
+                <span>😲</span>
+                <span>☹️</span>
+                <span>🙁</span>
+                <span>😖</span>
+                <span>😞</span>
+                <span>😟</span>
+                <span>😤</span>
+                <span>😢</span>
+                <span>😭</span>
+                <span>😦</span>
+                <span>😧</span>
+                <span>😨</span>
+                <span>😩</span>
+                <span>🤯</span>
+                <span>😬</span>
+                <span>😰</span>
+                <span>😱</span>
+                <span>😳</span>
+                <span>🤪</span>
+                <span>😵</span>
+                <span>😡</span>
+                <span>😠</span>
+                <span>🤬</span>
+                <span>😷</span>
+                <span>🤒</span>
+                <span>🤕</span>
+                <span>🤢</span>
+                <span>🤮</span>
+                <span>🤧</span>
+                <span>😇</span>
+                <span>🤠</span>
+                <span>🤡</span>
+                <span>🤥</span>
+                <span>🤫</span>
+                <span>🤭</span>
+                <span>🧐</span>
+                <span>🤓</span>
+                <span>😈</span>
+                <span>👿</span>
+                <span>👹</span>
+                <span>👺</span>
+                <span>💀</span>
+                <span>👻</span>
+                <span>👽</span>
+                <span>🤖</span>
+                <span>💩</span>
+                <span>😺</span>
+                <span>😸</span>
+                <span>😹</span>
+                <span>😻</span>
+                <span>😼</span>
+                <span>😽</span>
+                <span>🙀</span>
+                <span>😿</span>
+                <span>😾</span>
+            `;
+            document.body.appendChild(emojiPickerDiv);
+
+            // Añadir evento a cada emoji
+            emojiPickerDiv.querySelectorAll('span').forEach(emoji => {
+                emoji.addEventListener('click', function() {
+                    messageInput.value += emoji.textContent;
+                    messageInput.focus();
+                });
+            });
+        }
+    });
 });
+
+
+async function loadMessages(matchId) {
+    try {
+        const response = await fetch(`http://20.117.185.81:3000/chat/${matchId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al cargar los mensajes: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al cargar mensajes:", error);
+        return [];
+    }
+}
+
