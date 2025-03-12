@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
-    document.querySelector('#preview-section').addEventListener('click', async () => {
+    document.getElementById('preview-section').addEventListener('click', async () => {
         await getUserDetails();
     });
     

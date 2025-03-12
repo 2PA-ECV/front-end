@@ -93,7 +93,7 @@ async function saveProfile() {
     console.log("Imagen seleccionada:", profile_image);
 
     // Validar campos obligatorios
-    if (!bio || isNaN(min_age_preference) || isNaN(max_age_preference) || !preferred_city || isNaN(altura) || !preferences || !profile_image) {
+    if (!bio || isNaN(min_age_preference) || isNaN(max_age_preference) || !preferred_city || isNaN(altura) || !preferences) {
         alert("Por favor, completa todos los campos obligatorios.");
         console.warn("Campos inválidos:", { bio, interests, min_age_preference, max_age_preference, preferred_city, altura });
         return;
