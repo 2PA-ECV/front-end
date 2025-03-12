@@ -159,6 +159,34 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     document.querySelector('.profile-container').addEventListener('click', async (event) => {
+        try {
+            const response = await fetch('http://20.117.185.81:3000/user/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+    
+            if (!response.ok) throw new Error('Error al obtener el usuario');
+    
+            const user = await response.json();
+            console.log("Usuario obtenido:", user);
+
+            const birthDate = new Date(user.birth_date);
+            const age = calculateAge(birthDate);
+    
+            const profileContainer = document.querySelector('.profile-container');
+            const profileDetails = profileContainer.querySelector('.profile-details');
+    
+            profileDetails.innerHTML = `
+                <h1>${user.name} <span class="age">${age}</span></h1>
+                <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+                <p class="bio">${user.bio ? user.bio : '<span class="emoji">🤔</span> Aún no lo tengo claro'}</p>
+            `;
+        } catch (error) {
+            console.error("Error al obtener datos del usuario:", error);
+        }
+        
         if (images.length > 0) {
             const containerWidth = event.currentTarget.clientWidth;
             const clickX = event.clientX;
@@ -172,27 +200,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             updateProfileImage();
             updateProgress();
         }
-    
-        try {
-            const response = await fetch('http://20.117.185.81:3000/user/', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-    
-            if (!response.ok) throw new Error('Error al obtener el usuario');
-    
-            const user = await response.json();
-            console.log("Usuario obtenido:", user);
-    
-            const profileDetails = document.querySelector('.profile-details');
-            profileDetails.querySelector('h1').innerHTML = `${user.name} <span class="age">${user.age}</span>`;
-            profileDetails.querySelectorAll('.bio')[1].innerHTML = `<i class="fas fa-search"></i> ${user.bio}`;
-        } catch (error) {
-            console.error("Error al obtener datos del usuario:", error);
-        }
     });
+    
+    function calculateAge(birthDate) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const month = today.getMonth() - birthDate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) age--;
+        return age;
+    }
     
     const editTab = document.getElementById('edit-tab');
     const previewTab = document.getElementById('preview-tab');
