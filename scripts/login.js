@@ -23,7 +23,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
         if (response.ok) {
             alert("Login exitoso");
             if (data.token) localStorage.setItem("token", data.token);
-            window.location.href = "like-page.html"; 
+            window.location.href = "edit-profile.html"; 
         } else {
             alert("Credenciales incorrectas, inténtalo de nuevo");
         }
