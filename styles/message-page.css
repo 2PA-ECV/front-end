@@ -8,15 +8,29 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #000;
     color: #fff;
+    height: 100vh;
+}
+
+section {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100vh;
+    width: 100%;
 }
 
 .header {
+    position: absolute;
     background-color: #1c1c1e;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
+    height: 40px;
+    width: 100%;
+    z-index: 100;
+  }
 
 .left-section {
     display: flex;
@@ -47,10 +61,19 @@ body {
     font-size: 14px;
     font-weight: bold;
     transition: background-color 0.3s;
+    margin-right: 40px;
 }
 
 .logout-btn:hover {
     background-color: #f857a6;
+}
+
+.matches-messages-container {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    z-index: 100;
+    z-index: 10;
 }
 
 .matches-container {
@@ -162,6 +185,8 @@ body {
     left: 0;
     right: 0;
     z-index: 10;
+    height: 64px;
+    width: 100%;
 }
 
 .navigation {
