@@ -9,9 +9,6 @@ body {
     background-color: #000;
     color: #fff;
     height: 100vh;
-    overflow-y: auto; 
-    height: auto; 
-    min-height: 100vh;
 }
 
 section {
@@ -19,10 +16,8 @@ section {
     display: flex;
     flex-direction: column;
     position: relative;
+    height: 100vh;
     width: 100%;
-    height: auto; 
-    min-height: 100vh;
-    overflow: visible; 
 }
 
 .header {
@@ -77,8 +72,7 @@ section {
     position: absolute;
     top: 60px;
     width: 100%;
-    z-index: 100;
-    z-index: 10;
+    overflow-y: auto;
 }
 
 .matches-container {
