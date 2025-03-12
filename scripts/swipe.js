@@ -341,6 +341,11 @@ async function handleSwipe(isLike, actualCard) {
               //alert('¡Tienes un nuevo match!');
           }
 
+          if (matchData.message === 'Match doble creado') {
+            animateMatch2PA();
+            //alert('¡Tienes un nuevo match!');
+          }
+
       } catch (error) {
           console.error('Error:', error);
       }
