@@ -158,22 +158,42 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
-    document.querySelector('.profile-container').addEventListener('click', (event) => {
+    document.querySelector('.profile-container').addEventListener('click', async (event) => {
         if (images.length > 0) {
             const containerWidth = event.currentTarget.clientWidth;
             const clickX = event.clientX;
-
+    
             if (clickX > containerWidth / 2) {
                 currentIndex = (currentIndex + 1) % images.length;
             } else {
                 currentIndex = (currentIndex - 1 + images.length) % images.length;
             }
-
+    
             updateProfileImage();
             updateProgress();
         }
+    
+        try {
+            const response = await fetch('http://20.117.185.81:3000/user/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+    
+            if (!response.ok) throw new Error('Error al obtener el usuario');
+    
+            const user = await response.json();
+            console.log("Usuario obtenido:", user);
+    
+            const profileDetails = document.querySelector('.profile-details');
+            profileDetails.querySelector('h1').innerHTML = `${user.name} <span class="age">${user.age}</span>`;
+            profileDetails.querySelectorAll('.bio')[1].innerHTML = `<i class="fas fa-search"></i> ${user.bio}`;
+        } catch (error) {
+            console.error("Error al obtener datos del usuario:", error);
+        }
     });
-
+    
     const editTab = document.getElementById('edit-tab');
     const previewTab = document.getElementById('preview-tab');
     const editSection = document.getElementById('edit-section');
