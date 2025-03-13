@@ -31,18 +31,8 @@ async function obtenerMatches() {
         }
     });
 
-    if (!response_2.ok) {
-        console.error("Error al obtener los matches");
-    } else {
-        const matches = await response_2.json();
-
-        // Verificar si la respuesta contiene matches
-        if (matches && matches.length > 0) {
-            console.log("Matches 2PA obtenidos:", matches);
-        } else {
-            console.log("No se encontraron matches 2PA.");
-        }
-    }
+    matches = await response_2.json();
+    console.log("Matches 2PA obtenidos:", matches);
 
     // Obtener el usuario actual
     const userResponse = await fetch('http://20.117.185.81:3000/user/', {
@@ -63,6 +53,7 @@ async function obtenerMatches() {
     mostrarMatchesEnHTML(data, currentUser);
     mostrarMatchesMessageEnHTML(data, currentUser);
     mostrarMatches2PAMessageEnHTML(matches, currentUser);
+
 
 }
 
@@ -263,80 +254,142 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
 }
 
 async function mostrarMatches2PAMessageEnHTML(matches2pa, currentUser) {
-    const messagesContainer = document.querySelector("#2pa-matches"); // Seleccionar solo los mensajes de match normales
+    const messagesContainer = document.querySelector("#pa-matches"); // Seleccionar solo los mensajes de match normales
     messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
-
+    console.log("Matches 2PA:", matches2pa);
     for (const match of matches2pa) {
+        // Filtrar los tres amigos (excluyendo al usuario actual)
+        const friends = [match.user_id_1, match.user_id_2, match.friend_1_id, match.friend_2_id].filter(f => f !== currentUser);
+        console.log("Amigos del match 2PA:", friends);
+        // Obtener las fotos de los amigos
+        const profilePictures = await Promise.all(friends.map(f => obtenerFotoPerfil(f)));
+        console.log("Fotos de perfil del match 2PA:", profilePictures);
+        // Crear la imagen de grupo combinada
+        // const groupProfilePicture = await generarImagenGrupo(profilePictures);
+
         // Crear el contenedor de match
         const messageElement = document.createElement("div");
         messageElement.classList.add("message");
-        
-        // Determinar cuál es el usuario al que corresponde la foto
-        const userId = (match.user_id_1 === currentUser) ? match.user_id_2 : match.user_id_1;
-        
-        try {
-            const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${userId}`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json"
-                }
-            });
 
-            if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
-            const profileData = await profileResponse.json();
-                
-            let profilePicture = 'https://placehold.co/80x120';
-
-            if (profileData.profile_picture) {
-                if (profileData.profile_picture.startsWith('http')) {
-                    profilePicture = profileData.profile_picture;
-                } else {
-                    const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-    
-                    if (fetchResponse.ok) {
-                        profilePicture = URL.createObjectURL(await fetchResponse.blob());
-                    }
-                }
-            }
-
-            // Mantener la estructura de tu mensaje
-            messageElement.innerHTML = `
-                <img src="${profilePicture}" alt="Foto de ${profileData.username}">
+        // Estructura HTML del match 2PA
+        messageElement.innerHTML = `
+                <img src="images/avatar-chat.webp" alt="Foto del grupo">
                 <div class="info">
-                    <div class="name">${profileData.username}</div>
-                    <div class="status">Empieza la conversación!</div>
+                    <div class="name">Match 2-pa #${match.match_id}</div>
+                    <div class="status">¡Empieza la conversación en grupo!</div>
                 </div>
-                <div class="badge">LE GUSTAS</div>
-            `;
+                <div class="badge">MATCH 2PA</div>
+        `;
 
-            
-
-        } catch (error) {
-            console.error('Error al obtener las fotos:', error);
-            messageElement.innerHTML = `
-                <img src="https://placehold.co/80x120" alt="Foto de ${profileData.username}">
-                <div class="info">
-                    <div class="name">${profileData.username}</div>
-                    <div class="status">Empieza la conversación!</div>
-                </div>
-                <div class="badge">LE GUSTAS</div>
-            `;
-        }
-
-        // Agregar el evento de click para abrir el chat
-        messageElement.addEventListener("click", () => abrirChat(match.match_id));
+        // Agregar evento para abrir el chat del match 2PA
+        messageElement.addEventListener("click", () => abrirChat2Pa(match.match_id));
         messagesContainer.appendChild(messageElement);
     }
 }
 
+async function obtenerFotoPerfil(userId) {
+    try {
+        const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${userId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+        const profileData = await profileResponse.json();
+
+        let profilePicture = 'https://placehold.co/80x120';
+
+        if (profileData.profile_picture) {
+            if (profileData.profile_picture.startsWith('http')) {
+                profilePicture = profileData.profile_picture;
+            } else {
+                const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+                if (fetchResponse.ok) {
+                    profilePicture = URL.createObjectURL(await fetchResponse.blob());
+                }
+            }
+        }
+        return profilePicture;
+    } catch (error) {
+        console.error("Error obteniendo la foto de perfil:", error);
+        return 'https://placehold.co/80x120';
+    }
+}
+
+
+async function generarImagenGrupo(imageUrls) {
+    return new Promise((resolve, reject) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const size = 100; // Tamaño total de la imagen
+        canvas.width = size;
+        canvas.height = size;
+
+        const positions = [
+            { x: 0, y: 0, w: size / 2, h: size / 2 }, // Arriba izquierda
+            { x: size / 2, y: 0, w: size / 2, h: size / 2 }, // Arriba derecha
+            { x: size / 4, y: size / 2, w: size / 2, h: size / 2 } // Abajo centro
+        ];
+
+        let loadedImages = 0;
+        const images = [];
+
+        imageUrls.forEach((url, index) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous"; // Intentar evitar problemas CORS
+            img.src = url;
+
+            img.onload = () => {
+                images[index] = img;
+                loadedImages++;
+                if (loadedImages === imageUrls.length) {
+                    // Dibujar imágenes en el canvas
+                    images.forEach((img, i) => {
+                        const { x, y, w, h } = positions[i];
+                        ctx.drawImage(img, x, y, w, h);
+                    });
+
+                    resolve(canvas.toDataURL("image/png"));
+                }
+            };
+
+            img.onerror = () => {
+                console.warn(`Error cargando imagen: ${url}`);
+                images[index] = new Image();
+                images[index].src = "https://placehold.co/80x120"; // Reemplazo por imagen por defecto
+                loadedImages++;
+
+                if (loadedImages === imageUrls.length) {
+                    images.forEach((img, i) => {
+                        const { x, y, w, h } = positions[i];
+                        ctx.drawImage(img, x, y, w, h);
+                    });
+
+                    resolve(canvas.toDataURL("image/png"));
+                }
+            };
+        });
+    });
+}
+
+
+
 
 function abrirChat(matchId) {
     window.location.href = `private-message-page.html?matchId=${matchId}`;
+}
+
+function abrirChat2Pa(matchId) {
+    window.location.href = `private-message-page.html?match2PAId=${matchId}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

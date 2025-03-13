@@ -26,19 +26,35 @@ async function obtenerUsuarioLogeado() {
     return currentUser;
 }
 
+function obtenerMatchId() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Primero revisamos si existe "matchId"
+    if (urlParams.has("matchId")) {
+        id = urlParams.get("matchId");
+        return "match-" + id;
+    }
+
+    // Si no existe "matchId", verificamos "match2PAId"
+    if (urlParams.has("match2PAId")) {
+        id = urlParams.get("match2PAId");
+        return "match2pa-" + id;
+    }
+
+    console.error("No se encontró matchId ni match2PAId en la URL");
+    return null;
+}
+
 async function connectChat() {
     const currentUser = await obtenerUsuarioLogeado();
-    const urlParams = new URLSearchParams(window.location.search);
-    const matchId = urlParams.get("matchId");
+    const matchId = obtenerMatchId();  // Se obtiene el ID correcto
 
     if (matchId) {
         socket.emit("joinRoom", matchId);
         console.log(`Conectado a la sala ${matchId}`);
 
-        // Evitar múltiples listeners eliminando el anterior
-        socket.off("receiveMessage"); 
+        socket.off("receiveMessage");
 
-        // Escuchar mensajes recibidos
         socket.on("receiveMessage", (messageData) => {
             console.log("Mensaje recibido:", messageData);
             if (messageData.senderId === currentUser) {
@@ -51,10 +67,11 @@ async function connectChat() {
 }
 
 
+
 function sendMessage() {
     const messageInput = document.getElementById("messageInput");
     const messageText = messageInput.value.trim();
-    const matchId = new URLSearchParams(window.location.search).get("matchId");
+    const matchId = obtenerMatchId(); ;
 
     obtenerUsuarioLogeado().then((currentUser) => {
         if (messageText && matchId && currentUser) {
@@ -92,74 +109,90 @@ document.getElementById("messageInput").addEventListener("keydown", (e) => {
 // Cargar usuario del chat dinámicamente
 async function loadChatUser() {
     const urlParams = new URLSearchParams(window.location.search);
-    const matchId = urlParams.get("matchId");
-
-    if (!matchId) {
-        console.error("No se encontró matchId en la URL");
-        return;
-    }
-
-    const currentUser = await obtenerUsuarioLogeado();
-    if (!currentUser) return;
-
-    try {
-        const response = await fetch(`http://20.117.185.81:3000/matches/${matchId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-            }
-        });
-
-        if (!response.ok) throw new Error("Error al obtener la información del match");
-
-        const matchData = await response.json();
-
-        const otherUserId = (matchData.user_id_1 === currentUser) ? matchData.user_id_2 : matchData.user_id_1;
-
-        const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${otherUserId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
-
-        const profileData = await profileResponse.json();
+    if (urlParams.has("matchId")) {
+        const matchId = urlParams.get("matchId");
         
-        // Actualizar la interfaz con el nombre y la foto del usuario
-        document.getElementById("chatUserName").textContent = profileData.username; // Nombre del usuario
-        if (profileData.profile_picture) {
-            // Verifica si la imagen ya es una URL completa
-            if (profileData.profile_picture.startsWith('http')) {
-                document.getElementById("image-preview-img").src = profileData.profile_picture;
-            } else {
-                // Si no, obtén la imagen desde el servidor
-                const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
-                const imageBlob = await fetchResponse.blob();
-                document.getElementById("profilePic").src = URL.createObjectURL(imageBlob);
-            }
-        } else {
-            document.getElementById("profilePic").src = "https://placehold.co/80x120";
+    
+        if (!matchId) {
+            console.error("No se encontró matchId en la URL");
+            return;
         }
+    
+        const currentUser = await obtenerUsuarioLogeado();
+        if (!currentUser) return;
+    
+        try {
+            const response = await fetch(`http://20.117.185.81:3000/matches/${matchId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                }
+            });
+    
+            if (!response.ok) throw new Error("Error al obtener la información del match");
+    
+            const matchData = await response.json();
+    
+            const otherUserId = (matchData.user_id_1 === currentUser) ? matchData.user_id_2 : matchData.user_id_1;
+    
+            const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${otherUserId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+    
+            const profileData = await profileResponse.json();
 
-        const messagesData = await loadMessages(matchId);
-        console.log("Mensajes cargados:", messagesData);
+            document.getElementById("chatUserName").textContent = profileData.username;
+    
+            // Verifica que el elemento con id 'profilePic' existe
+            const profilePicElement = document.getElementById("profilePic");
+            if (profilePicElement) {
+                if (profileData.profile_picture) {
+                    // Verifica si la imagen ya es una URL completa
+                    if (profileData.profile_picture.startsWith('http')) {
+                        profilePicElement.src = profileData.profile_picture;
+                    } else {
+                        // Si no, obtén la imagen desde el servidor
+                        const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem("token")}`
+                            }
+                        });
+                        if (!fetchResponse.ok) throw new Error('Error al descargar la imagen');
+                        const imageBlob = await fetchResponse.blob();
+                        profilePicElement.src = URL.createObjectURL(imageBlob);
+                    }
+                } else {
+                    profilePicElement.src = "https://placehold.co/80x120"; // Imagen predeterminada si no hay imagen de perfil
+                }
+            } else {
+                console.error('No se encontró el elemento con id "profilePic"');
+            }
+    
+            const messagesData = await loadMessages(matchId);
+            console.log("Mensajes cargados:", messagesData);
+    
+            messagesData.messages.forEach(msg => {
+                addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received");
+            });
 
-        messagesData.messages.forEach(msg => {
-            addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received");
-        });
-
-
-    } catch (error) {
-        console.error("Error en loadChatUser:", error);
+        } catch (error) {
+            console.error("Error en loadChatUser:", error);
+        }
+    } else if (urlParams.has("match2PAId")) {
+        const matchId = urlParams.get("match2PAId");
+        
+        document.getElementById("profilePic").src = "images/avatar-chat.webp";
+        document.getElementById("chatUserName").textContent = "Match #" + matchId;
     }
+
+
+    
 }
 
 
