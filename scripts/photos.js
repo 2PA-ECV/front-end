@@ -173,10 +173,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             updateProgress();
         }
     });
-
-    document.getElementById('preview-section').addEventListener('click', async () => {
-        await getUserDetails();
-    });
     
     async function getUserDetails() {
         try {
@@ -208,6 +204,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
     
+    
     function calculateAge(birthDate) {
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -233,6 +230,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         editTab.classList.remove('active');
         editSection.style.display = 'none';
         previewSection.style.display = 'block';
+        
+        getUserDetails();
     });
 
     await loadUserPhotos();
