@@ -23,6 +23,36 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    async function getUserDetails() {
+        try {
+            const response = await fetch('http://20.117.185.81:3000/user/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+    
+            if (!response.ok) throw new Error('Error al obtener el usuario');
+    
+            const user = await response.json();
+            console.log("Usuario obtenido:", user);
+    
+            const birthDate = new Date(user.birth_date);
+            const age = calculateAge(birthDate);
+    
+            const profileContainer = document.querySelector('.profile-container');
+            const profileDetails = profileContainer.querySelector('.profile-details');
+    
+            profileDetails.innerHTML = `
+                <h1>${user.name} <span class="age">${age}</span></h1>
+                <p class="bio"><i class="fas fa-search"></i> Busco...</p>
+                <p class="bio">${user.bio ? user.bio : '<span class="emoji">🤔</span> Aún no lo tengo claro'}</p>
+            `;
+        } catch (error) {
+            console.error("Error al obtener datos del usuario:", error);
+        }
+    }
+
     async function loadUserPhotos() {
         try {
             const response = await fetch(`http://20.117.185.81:3000/photos/`, {
@@ -174,36 +204,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
     
-    async function getUserDetails() {
-        try {
-            const response = await fetch('http://20.117.185.81:3000/user/', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-    
-            if (!response.ok) throw new Error('Error al obtener el usuario');
-    
-            const user = await response.json();
-            console.log("Usuario obtenido:", user);
-    
-            const birthDate = new Date(user.birth_date);
-            const age = calculateAge(birthDate);
-    
-            const profileContainer = document.querySelector('.profile-container');
-            const profileDetails = profileContainer.querySelector('.profile-details');
-    
-            profileDetails.innerHTML = `
-                <h1>${user.name} <span class="age">${age}</span></h1>
-                <p class="bio"><i class="fas fa-search"></i> Busco...</p>
-                <p class="bio">${user.bio ? user.bio : '<span class="emoji">🤔</span> Aún no lo tengo claro'}</p>
-            `;
-        } catch (error) {
-            console.error("Error al obtener datos del usuario:", error);
-        }
-    }
-    
     
     function calculateAge(birthDate) {
         const today = new Date();
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         editTab.classList.remove('active');
         editSection.style.display = 'none';
         previewSection.style.display = 'block';
-        
+
         getUserDetails();
     });
 
