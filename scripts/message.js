@@ -21,7 +21,29 @@ async function obtenerMatches() {
 
     const data = await response.json();
     console.log("Matches obtenidos:", data);
-    
+
+    // Obtener los matches 2PA
+    const response_2 = await fetch("http://20.117.185.81:3000/matches2pa", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response_2.ok) {
+        console.error("Error al obtener los matches");
+    } else {
+        const matches = await response_2.json();
+
+        // Verificar si la respuesta contiene matches
+        if (matches && matches.length > 0) {
+            console.log("Matches 2PA obtenidos:", matches);
+        } else {
+            console.log("No se encontraron matches 2PA.");
+        }
+    }
+
     // Obtener el usuario actual
     const userResponse = await fetch('http://20.117.185.81:3000/user/', {
         method: 'GET',
@@ -40,6 +62,8 @@ async function obtenerMatches() {
     
     mostrarMatchesEnHTML(data, currentUser);
     mostrarMatchesMessageEnHTML(data, currentUser);
+    mostrarMatches2PAMessageEnHTML(matches, currentUser);
+
 }
 
 async function mostrarMatchesEnHTML(matches, currentUser) {
@@ -237,6 +261,79 @@ async function mostrarMatchesMessageEnHTML(matches, currentUser) {
         messagesContainer.appendChild(messageElement);
     }
 }
+
+async function mostrarMatches2PAMessageEnHTML(matches2pa, currentUser) {
+    const messagesContainer = document.querySelector("#2pa-matches"); // Seleccionar solo los mensajes de match normales
+    messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
+
+    for (const match of matches2pa) {
+        // Crear el contenedor de match
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        
+        // Determinar cuál es el usuario al que corresponde la foto
+        const userId = (match.user_id_1 === currentUser) ? match.user_id_2 : match.user_id_1;
+        
+        try {
+            const profileResponse = await fetch(`http://20.117.185.81:3000/profile/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!profileResponse.ok) throw new Error("Error al obtener el perfil del usuario");
+            const profileData = await profileResponse.json();
+                
+            let profilePicture = 'https://placehold.co/80x120';
+
+            if (profileData.profile_picture) {
+                if (profileData.profile_picture.startsWith('http')) {
+                    profilePicture = profileData.profile_picture;
+                } else {
+                    const fetchResponse = await fetch(`http://20.117.185.81:3000${profileData.profile_picture}`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+    
+                    if (fetchResponse.ok) {
+                        profilePicture = URL.createObjectURL(await fetchResponse.blob());
+                    }
+                }
+            }
+
+            // Mantener la estructura de tu mensaje
+            messageElement.innerHTML = `
+                <img src="${profilePicture}" alt="Foto de ${profileData.username}">
+                <div class="info">
+                    <div class="name">${profileData.username}</div>
+                    <div class="status">Empieza la conversación!</div>
+                </div>
+                <div class="badge">LE GUSTAS</div>
+            `;
+
+            
+
+        } catch (error) {
+            console.error('Error al obtener las fotos:', error);
+            messageElement.innerHTML = `
+                <img src="https://placehold.co/80x120" alt="Foto de ${profileData.username}">
+                <div class="info">
+                    <div class="name">${profileData.username}</div>
+                    <div class="status">Empieza la conversación!</div>
+                </div>
+                <div class="badge">LE GUSTAS</div>
+            `;
+        }
+
+        // Agregar el evento de click para abrir el chat
+        messageElement.addEventListener("click", () => abrirChat(match.match_id));
+        messagesContainer.appendChild(messageElement);
+    }
+}
+
 
 function abrirChat(matchId) {
     window.location.href = `private-message-page.html?matchId=${matchId}`;
