@@ -228,3 +228,36 @@ section {
     padding: 2px 5px;
     border-radius: 50%;
 }
+
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #000000;
+    margin-bottom: 10px;
+  }
+  
+  .tab-button {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background-color: #7589d723;
+    transition: background-color 0.3s;
+    color: white; /* Color del texto blanco */
+  }
+  
+  .tab-button.active {
+    background-color: #36497e5a;
+    font-weight: bold;
+    color: white; /* Color del texto blanco */
+  }
+  
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }

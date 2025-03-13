@@ -167,7 +167,7 @@ async function mostrarMatchesEnHTML(matches, currentUser) {
 
 
 async function mostrarMatchesMessageEnHTML(matches, currentUser) {
-    const messagesContainer = document.querySelector(".messages"); // Seleccionar el contenedor de mensajes
+    const messagesContainer = document.querySelector("#normal-matches"); // Seleccionar solo los mensajes de match normales
     messagesContainer.innerHTML = ""; // Limpiar los mensajes anteriores
 
     for (const match of matches) {
@@ -242,4 +242,25 @@ function abrirChat(matchId) {
     window.location.href = `private-message-page.html?matchId=${matchId}`;
 }
 
-document.addEventListener("DOMContentLoaded", obtenerMatches);
+document.addEventListener("DOMContentLoaded", () => {
+    setupTabs(); // Configurar los tabs
+    obtenerMatches(); // Cargar los matches al iniciar la página
+});
+
+function setupTabs() {
+    const tabButtons = document.querySelectorAll(".tab-button"); // Selecciona todos los botones de pestaña
+    const tabContents = document.querySelectorAll(".tab-content"); // Selecciona todos los contenidos de pestaña
+
+    tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            // Remover la clase "active" de todos los botones y contenidos
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            tabContents.forEach((content) => content.classList.remove("active"));
+
+            // Agregar la clase "active" al botón y contenido seleccionado
+            const tabId = button.getAttribute("data-tab"); // Obtener el ID de la pestaña desde el atributo data-tab
+            button.classList.add("active"); // Activar el botón clicado
+            document.getElementById(tabId).classList.add("active"); // Activar el contenido correspondiente
+        });
+    });
+}
