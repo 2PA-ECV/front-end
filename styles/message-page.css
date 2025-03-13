@@ -242,13 +242,13 @@ section {
     text-align: center;
     cursor: pointer;
     border: none;
-    background-color: #7589d723;
+    background-color: #1c1c1e;
     transition: background-color 0.3s;
     color: white; /* Color del texto blanco */
   }
   
   .tab-button.active {
-    background-color: #36497e5a;
+    background-color: #2C2C2E;
     font-weight: bold;
     color: white; /* Color del texto blanco */
   }
