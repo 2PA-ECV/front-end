@@ -45,6 +45,25 @@ function obtenerMatchId() {
     return null;
 }
 
+async function getUsername(userId) {
+    try {
+        const response = await fetch(`http://20.117.185.81:3000/user/${userId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+
+        if (!response.ok) throw new Error("Error al obtener el nombre del usuario");
+
+        const userData = await response.json();
+        return userData.username;
+    } catch (error) {
+        console.error("Error obteniendo el username:", error);
+        return null;
+    }
+}
+
 async function connectChat() {
     const currentUser = await obtenerUsuarioLogeado();
     const matchId = obtenerMatchId();  // Se obtiene el ID correcto
@@ -55,12 +74,20 @@ async function connectChat() {
 
         socket.off("receiveMessage");
 
-        socket.on("receiveMessage", (messageData) => {
+        socket.on("receiveMessage", async (messageData) => {
             console.log("Mensaje recibido:", messageData);
+
+        
+            let senderName = "";
+            if (matchId.startsWith("match2pa-")) {
+                senderName = await getUsername(messageData.senderId);
+                console.log("Nombre del remitente:", senderName);
+            }
+
             if (messageData.senderId === currentUser) {
-                addMessageToChat(messageData.message, "sent");
+                addMessageToChat(messageData.message, "sent", senderName);
             } else {
-                addMessageToChat(messageData.message, "received");
+                addMessageToChat(messageData.message, "received", senderName);
             }
         });
     }
@@ -88,11 +115,13 @@ function sendMessage() {
 }
 
 // Función para agregar mensajes al chat
-function addMessageToChat(message, type) {
+function addMessageToChat(message, type, senderName) {
     const messagesContainer = document.getElementById("messagesContainer");
     const messageElement = document.createElement("div");
     messageElement.classList.add("message", type);
-    messageElement.innerHTML = `<div class="message-text">${message}</div>`;
+    messageElement.innerHTML = senderName ? 
+        `<strong>${senderName}:</strong> <div class="message-text">${message}</div>` :
+        `<div class="message-text">${message}</div>`;
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
