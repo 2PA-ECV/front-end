@@ -222,13 +222,13 @@ async function loadChatUser() {
         const currentUser = await obtenerUsuarioLogeado();
         if (!currentUser) return;
 
-        const messagesData = await loadMessages(matchId);
-        console.log("Mensajes cargados:", messagesData);
+        //const messagesData = await loadMessages(matchId);
+        //console.log("Mensajes cargados:", messagesData);
 
-        for (const msg of messagesData.messages) {
-            const senderName = await getUsername(msg.senderId);
-            addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received", senderName);
-        }
+        //for (const msg of messagesData.messages) {
+            //const senderName = await getUsername(msg.senderId);
+            //addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received", senderName);
+        //}
     }
 
 
