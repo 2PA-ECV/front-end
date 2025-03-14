@@ -115,7 +115,7 @@ function sendMessage() {
 }
 
 // Función para agregar mensajes al chat
-function addMessageToChat(message, type, senderName) {
+function addMessageToChat(message, type, senderName="") {
     const messagesContainer = document.getElementById("messagesContainer");
     const messageElement = document.createElement("div");
     messageElement.classList.add("message", type);
@@ -218,6 +218,17 @@ async function loadChatUser() {
         
         document.getElementById("profilePic").src = "images/avatar-chat.webp";
         document.getElementById("chatUserName").textContent = "Match #" + matchId;
+        
+        const currentUser = await obtenerUsuarioLogeado();
+        if (!currentUser) return;
+
+        const messagesData = await loadMessages(matchId);
+        console.log("Mensajes cargados:", messagesData);
+
+        for (const msg of messagesData.messages) {
+            const senderName = await getUsername(msg.senderId);
+            addMessageToChat(msg.message, msg.senderId === currentUser ? "sent" : "received", senderName);
+        }
     }
 
 
